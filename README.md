@@ -31,8 +31,9 @@ Both:
 
 ## C4
 
-![Imaginatorul](https://c4model.com/img/spring-petclinic-components.png)
-
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/level_1.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/level_2.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/level_3.svg)
 
 ## AI / ML
 
