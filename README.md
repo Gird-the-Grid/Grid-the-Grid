@@ -23,11 +23,11 @@ Both:
 - Near perfect reliability and uptime
 
 
-## Project structure -> github link
+## [Project structure](https://github.com/Ana-poto/Gird-the-Grid/)
 
 ## Project stack
 
-* .NET 5
+* .NET 5, Blazor
 
 ## C4
 
@@ -41,3 +41,6 @@ Both:
  * (Maybe) Neural Network trained on all customers' data
 
 ## CI/CD pipeline
+
+  * TODO: Add Github action with linter and CI
+
