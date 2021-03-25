@@ -31,9 +31,9 @@ Both:
 
 ## C4
 
-![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/level_1.svg)
-![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/level_2.svg)
-![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/level_3.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/C4v2/level_1v2.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/C4v2/level_2v2.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/C4v2/level_3v2.svg)
 
 ## AI / ML
 
