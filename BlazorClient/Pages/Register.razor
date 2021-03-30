@@ -1,10 +1,10 @@
-@page "/login"
+@page "/register"
 @inject HttpClient Http
 
 
 <div class="text">
     <h1> Welcome to Grid the Grid</h1><br />
-    <h2> Login Page</h2>
+    <h2> Register page</h2>
 </div>
 
 @if (!logged)
@@ -16,7 +16,7 @@
                 <br />
                 <InputText id="password" @bind-Value="loginModel.password" class="form-control" placeholder="Password" required />
                 <br />
-                <button type="submit">Login</button>
+                <button type="submit">Register</button>
             </EditForm>
     </div>
 </div>
@@ -50,8 +50,7 @@ else
     private async Task Log_in()
     {
         LoginPacket lp = new LoginPacket(loginModel.username, loginModel.password);
-        var r = await Http.PostAsJsonAsync("http://localhost:49429/auth/login", lp);
-        //var r = await Http.PostAsJsonAsync("http://localhost:49429/auth/login", new { email = lp.username, password = lp.password });
+        var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/register", lp);
         response = await r.Content.ReadAsStringAsync();
         logged = true;
 
