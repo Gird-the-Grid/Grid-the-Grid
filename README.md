@@ -23,16 +23,17 @@ Both:
 - Near perfect reliability and uptime
 
 
-## Project structure -> github link
+## [Project structure](https://github.com/Ana-poto/Gird-the-Grid/)
 
 ## Project stack
 
-* .NET 5
+* .NET 5, Blazor
 
 ## C4
 
-![Imaginatorul](https://c4model.com/img/spring-petclinic-components.png)
-
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/C4v2/level_1v2.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/C4v2/level_2v2.svg)
+![Imaginatorul](https://github.com/Ana-poto/Gird-the-Grid/blob/master/docs/C4v2/level_3v2.svg)
 
 ## AI / ML
 
@@ -40,3 +41,6 @@ Both:
  * (Maybe) Neural Network trained on all customers' data
 
 ## CI/CD pipeline
+
+  * TODO: Add Github action with linter and CI
+
