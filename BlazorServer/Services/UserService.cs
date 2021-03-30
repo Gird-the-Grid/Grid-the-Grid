@@ -23,10 +23,16 @@ namespace WebApplication1.Services
         public User Get(string id) =>
             _users.Find<User>(user => user.Id == id).FirstOrDefault();
 
-        public User Create(User book)
+        //TODO: check if this is really ok and secure
+        public User Find(string email)
+            => _users.Find<User>(user => user.Email == email).FirstOrDefault();
+
+        public User Create(User user)
         {
-            _users.InsertOne(book);
-            return book;
+            user.Admin = false;
+            user.Id = null;
+            _users.InsertOne(user);
+            return user;
         }
 
         public void Update(string id, User userIn) =>

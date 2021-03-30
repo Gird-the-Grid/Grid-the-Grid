@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers
@@ -14,10 +15,11 @@ namespace WebApplication1.Controllers
         {
             _userService = userService;
             //TODO: Admin access to manage users
+            //Deny access to users that are not admins
         }
 
         [HttpGet]
-        public List<string> DenyAccess ()
+        public async Task<List<string>> DenyAccess ()
         {
             return new List<string>(new string[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" });
         }

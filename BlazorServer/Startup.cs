@@ -22,6 +22,24 @@ namespace BlazorServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("CorsPolicy",
+            //        builder => builder.AllowAnyOrigin()
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .SetIsOriginAllowed(origin => true)
+            //        .AllowCredentials());
+            //});
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             services.Configure<MongoDbSettings>(
                 Configuration.GetSection(nameof(MongoDbSettings))
             );
@@ -48,6 +66,8 @@ namespace BlazorServer
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BlazorServer v1"));
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

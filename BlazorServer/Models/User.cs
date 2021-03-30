@@ -13,5 +13,7 @@ namespace WebApplication1.Models
 
         public string Password { get; set; }
 
+        public bool Admin { get; set; }
+
     }
 }
