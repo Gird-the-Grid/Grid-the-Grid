@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorApp2
+namespace BlazorClient
 {
     public class Program
     {
