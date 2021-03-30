@@ -1,0 +1,63 @@
+@page "/login"
+@inject HttpClient Http
+
+
+<div class="text">
+    <h1 id="h1-title"> Welcome to  <br> Grid the Grid</h1>
+</div>
+
+@if (!logged)
+{
+<div class="row">
+    <div class="container">
+            <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
+                <h2 id="h1-text"> Login </h2>
+                <br />
+                <InputText id="username" @bind-Value="loginModel.username" class="form-control" placeholder="Username" required />
+                <br />
+                <InputText id="password" @bind-Value="loginModel.password" class="form-control" placeholder="Password" required />
+                <br />
+                <button type="submit">Login</button>
+            </EditForm>
+    </div>
+</div>
+}
+else
+{
+    <br />
+    <p>@response</p>
+}
+
+@code {
+
+    private BlazorClient.Model.LoginModel loginModel = new BlazorClient.Model.LoginModel();
+
+    private bool logged = false;
+
+    private string response;
+
+    private class LoginPacket
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+
+        public LoginPacket(string u, string p)
+        {
+            username = u;
+            password = p;
+        }
+    }
+
+    private async Task Log_in()
+    {
+        LoginPacket lp = new LoginPacket(loginModel.username, loginModel.password);
+        var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/login", lp);
+        response = await r.Content.ReadAsStringAsync();
+        logged = true;
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

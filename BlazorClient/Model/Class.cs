@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorClient.Model
-{
-    public class Class
+{ 
+    public class LoginModel
     {
-        public bool success { get; set; }
-        public string da { get; set; }
+        [Required]
+        public string username { get; set; }
+        [Required]
+        public string password { get; set; }
     }
 }
