@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using dotenv.net;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Models;
@@ -11,8 +12,8 @@ namespace WebApplication1.Services
 
         public UserService(IMongoDbSettings settings)
         {
-            var client = new MongoClient("mongodb+srv://standard_user:standard_password$$$$$$$@cluster0.vdvzo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-            var database = client.GetDatabase("dotnet");
+            var client = new MongoClient(DotEnv.Read()["MONGODB_URI"]);
+            var database = client.GetDatabase(DotEnv.Read()["MONGODB_DB"]);
 
             _users = database.GetCollection<User>("users"); //settings.CollectionName is not users
         }

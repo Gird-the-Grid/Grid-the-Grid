@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using WebApplication1.Models;
 using WebApplication1.Services;
+using dotenv.net;
 
 namespace BlazorServer
 {
@@ -60,6 +61,9 @@ namespace BlazorServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            DotEnv.Load();
+            
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using dotenv.net;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApplication1.Services;
@@ -19,9 +20,10 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public async Task<List<string>> DenyAccess ()
+        public async Task<IDictionary<string, string>> DenyAccess ()
         {
-            return new List<string>(new string[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" });
+            var x = DotEnv.Read();
+            return x;
         }
 
     }
