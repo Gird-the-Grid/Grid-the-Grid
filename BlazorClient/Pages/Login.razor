@@ -3,20 +3,20 @@
 
 
 <div class="text">
-    <h1> Welcome to Grid the Grid</h1><br />
-    <h2> Login Page</h2>
+    <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
+    <h2 class="h1-title"> Already a client? Login</h2>
 </div>
 
 @if (!logged)
 {
 <div class="row">
-    <div class="container">
+    <div class="flex-container">
             <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
-                <InputText id="username" @bind-Value="loginModel.username" class="form-control" placeholder="Username" required />
+                <InputText id="username" @bind-Value="loginModel.username" type="text" class="form-control" placeholder="Email" required />
                 <br />
-                <InputText id="password" @bind-Value="loginModel.password" class="form-control" placeholder="Password" required />
+                <InputText id="password" @bind-Value="loginModel.password" type="password" class="form-control" placeholder="Password" required />
                 <br />
-                <button type="submit">Login</button>
+                <button class="custom-button" type="submit">Login</button>
             </EditForm>
     </div>
 </div>

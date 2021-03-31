@@ -1,0 +1,93 @@
+﻿/*body {
+    background-image: url("grid.png");
+    background-repeat: no-repeat;
+    background-origin:border-box;
+    background-size: cover;
+    background-blend-mode: lighten;
+}*/
+
+body {
+    box-sizing: content-box;
+}
+.h1-title {
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    color: white;
+}
+
+.row {
+    width: 1000px;
+    height: 300px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+/*    mix-blend-mode: luminosity;*/
+    background-image: url("electric_grid.gif");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.flex-container {
+    width:80%;
+    margin-left:20%;
+    padding: 10%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border: 1px solid black;
+    border-style: dotted dotted solid dotted;
+}
+
+
+.form {
+    mix-blend-mode: luminosity;
+    margin: 5%;
+    width: 100%;
+    height: 100%;
+    padding: 5%;
+    align-self: center;
+    background-image: none;
+}
+.custom-button {
+    color: #fff;
+    background-color: #370D32;
+    border-radius: 5px;
+    mix-blend-mode: normal;
+    border-color: #8860D0;
+    width: 70%;
+    height: 30%;
+    align-self: center;
+}
+
+#username {
+    width: 100%;
+    height: 30%;
+    align-self: center;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border: 1px solid black;
+    border-style: dotted dotted solid dotted;
+}
+
+#password {
+    width: 100%;
+    height: 30%;
+    align-self: center;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border: 1px solid black;
+    border-style: dotted dotted solid dotted;
+}
+
+@media only screen and (max-width: 768px) {
+    .flex-container {
+        margin:0;
+        width: 100%;
+        max-width: 40%;
+        border: 1px solid red;
+    }
+}

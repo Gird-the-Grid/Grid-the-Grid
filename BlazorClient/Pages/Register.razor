@@ -1,62 +1,62 @@
 @page "/register"
 @inject HttpClient Http
 
-
-<div class="text">
-    <h1> Welcome to Grid the Grid</h1><br />
-    <h2> Register page</h2>
-</div>
-
-@if (!logged)
-{
-<div class="row">
-    <div class="container">
-            <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
-                <InputText id="username" @bind-Value="loginModel.username" class="form-control" placeholder="Username" required />
-                <br />
-                <InputText id="password" @bind-Value="loginModel.password" class="form-control" placeholder="Password" required />
-                <br />
-                <button type="submit">Register</button>
-            </EditForm>
+    <div class="text">
+        <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
+        <h2 class="h1-title"> Please, register so we can get started</h2>
     </div>
-</div>
-}
-else
-{
-    <br />
-    <p>@response</p>
-}
 
-@code {
-
-    private BlazorClient.Model.LoginModel loginModel = new BlazorClient.Model.LoginModel();
-
-    private bool logged = false;
-
-    private string response;
-
-    private class LoginPacket
+    @if (!logged)
     {
-        public string username { get; set; }
-        public string password { get; set; }
+        <div class="row">
+            <div class="flex-container">
+                <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
+                    <InputText id="username" @bind-Value="loginModel.username" type="text" class="form-control" placeholder="Email" required />
+                    <br />
+                    <InputText id="password" @bind-Value="loginModel.password" type="password" class="form-control" placeholder="Password" required />
+                    <br />
+                    <button class="custom-button" type="submit">Register</button>
+                </EditForm>
+            </div>
+        </div>
 
-        public LoginPacket(string u, string p)
+    }
+    else
+    {
+        <br />
+        <p>@response</p>
+    }
+
+    @code {
+
+        private BlazorClient.Model.LoginModel loginModel = new BlazorClient.Model.LoginModel();
+
+        private bool logged = false;
+
+        private string response;
+
+        private class LoginPacket
         {
-            username = u;
-            password = p;
+            public string username { get; set; }
+            public string password { get; set; }
+
+            public LoginPacket(string u, string p)
+            {
+                username = u;
+                password = p;
+            }
+        }
+
+        private async Task Log_in()
+        {
+            LoginPacket lp = new LoginPacket(loginModel.username, loginModel.password);
+            var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/register", lp);
+            response = await r.Content.ReadAsStringAsync();
+            logged = true;
+
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
         }
     }
-
-    private async Task Log_in()
-    {
-        LoginPacket lp = new LoginPacket(loginModel.username, loginModel.password);
-        var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/register", lp);
-        response = await r.Content.ReadAsStringAsync();
-        logged = true;
-
-        await InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
-    }
-}
