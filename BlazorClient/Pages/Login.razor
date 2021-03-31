@@ -1,25 +1,23 @@
 @page "/login"
 @inject HttpClient Http
 
-
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
     <h2 class="h1-title"> Already a client? Login</h2>
 </div>
+<br />
 
 @if (!logged)
 {
-<div class="row">
-    <div class="flex-container">
-            <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
-                <InputText id="username" @bind-Value="loginModel.username" type="text" class="form-control" placeholder="Email" required />
-                <br />
-                <InputText id="password" @bind-Value="loginModel.password" type="password" class="form-control" placeholder="Password" required />
-                <br />
-                <button class="custom-button" type="submit">Login</button>
-            </EditForm>
+    <div class="flex-container" style="margin: 0 auto; display:flex; justify-content:center; width:50%">
+        <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
+            <InputText id="username" @bind-Value="loginModel.username" type="text" class="form-control" placeholder="Email" required />
+            <br />
+            <InputText id="password" @bind-Value="loginModel.password" type="password" class="form-control" placeholder="Password" required />
+            <br />
+            <button class="custom-button" type="submit">Login</button>
+        </EditForm>
     </div>
-</div>
 }
 else
 {
