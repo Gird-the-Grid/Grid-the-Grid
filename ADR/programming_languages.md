@@ -38,9 +38,9 @@ Decided. We are open to new alternatives, if problems with the current ones aris
 
 ### Argument
 #### Summary per each:
-We choose Blazor and .NET because it allows us to write the code for the client and server in the same technology (.NET).
+- We choose Blazor and .NET because it allows us to write the code for the client and server in the same technology (.NET).
 Also, the same classes can be shared by both client and server code. Meaning that using Blazor will provide the stability, consistency and productivity of .NET, in comparison to other front-end frameworks.
-For storage, we choose to use MongoDB, because is a cloud-base storage, that offers high performance, it has a cost-effective DBMS and is easy to scale.
+- For storage, we choose to use MongoDB, because is a cloud-base storage, that offers high performance, it has a cost-effective DBMS and is easy to scale.
 ## Notes
 
 Any notes here.
