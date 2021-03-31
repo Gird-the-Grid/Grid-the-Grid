@@ -5,6 +5,7 @@
 ![Imaginatorul](https://cdn.discordapp.com/attachments/701769597959012424/826827378331746324/unknown.png)
 - Verify that async methods return Tasks
 - Verify that ApiControllers return Task<IActionResult>
+- Add Github Project ad transfer tasks there (and document them better)
 ## Low
 - Steal code from Olariu
 - Change Db logic to be async (Services + Querries)
@@ -18,3 +19,4 @@
 - Version the APIs 
 
 ![Imaginatorul](https://cdn.discordapp.com/attachments/701769597959012424/826826097575460924/unknown.png)
+
