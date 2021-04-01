@@ -1,8 +1,7 @@
-﻿using BlazorServer.Models.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Models
+namespace BlazorServerAPI.Models.Entities
 {
     public class User : BaseEntity, IValidatableObject
     {

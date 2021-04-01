@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BlazorServerAPI.Handlers;
+using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Models.Requests;
+using BlazorServerAPI.Models.Responses;
+using BlazorServerAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using WebApplication1.Models;
-using WebApplication1.Services;
-using BlazorServer.Models.Responses;
-using BlazorServer.Handlers;
 
-namespace BlazorServer.Controllers
+namespace BlazorServerAPI.Controllers
 {
     [Route("auth/")]
     [ApiController]
@@ -22,16 +23,18 @@ namespace BlazorServer.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User user)
+        public async Task<IActionResult> Register([FromBody] RegisterUser user)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                //TODO: use FluentValidation
+                //TODO: Check if this ModelState refers to RegisterUser and not user
+                return BadRequest(new ErrorResponse(error: ModelState.ToString()));
             }
             try
             {
                 var x = await _handler.Register(user);
-                return Ok(x.ToString());
+                return StatusCode(StatusCodes.Status201Created, x.ToString());
             }
             catch (MongoDB.Driver.MongoWriteException)
             {
@@ -53,7 +56,7 @@ namespace BlazorServer.Controllers
             try
             {
                 var x = await _handler.Login(user);
-                return Ok(x.ToString());
+                return StatusCode(StatusCodes.Status202Accepted, x.ToString());
             }
             catch (Exception e)
             {

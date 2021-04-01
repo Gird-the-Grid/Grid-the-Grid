@@ -1,4 +1,4 @@
-﻿namespace BlazorServer.Models.Responses
+﻿namespace BlazorServerAPI.Models.Responses
 {
     public interface IResponse
     {

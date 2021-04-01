@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace BlazorServer.Models.Entities
+namespace BlazorServerAPI.Models.Entities
 {
     public class BaseEntity
     {

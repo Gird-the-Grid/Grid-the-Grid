@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorServer.Controllers
+namespace BlazorServerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

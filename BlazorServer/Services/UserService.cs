@@ -1,11 +1,12 @@
-﻿using dotenv.net;
+﻿using BlazorServerAPI.Models;
+using BlazorServerAPI.Models.Entities;
+using dotenv.net;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Models;
 
-namespace WebApplication1.Services
+namespace BlazorServerAPI.Services
 {
     public class UserService
     {

@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Models
+﻿namespace BlazorServerAPI.Models
 {
     public class MongoDbSettings : IMongoDbSettings
     {

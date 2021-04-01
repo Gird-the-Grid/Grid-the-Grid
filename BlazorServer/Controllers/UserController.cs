@@ -1,10 +1,10 @@
-﻿using dotenv.net;
+﻿using BlazorServerAPI.Services;
+using dotenv.net;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApplication1.Services;
 
-namespace WebApplication1.Controllers
+namespace BlazorServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
