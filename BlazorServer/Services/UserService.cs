@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.Models;
 
 namespace WebApplication1.Services
@@ -15,34 +16,46 @@ namespace WebApplication1.Services
             var client = new MongoClient(DotEnv.Read()["MONGODB_URI"]);
             var database = client.GetDatabase(DotEnv.Read()["MONGODB_DB"]);
 
-            _users = database.GetCollection<User>("users"); //settings.CollectionName is not users
+            _users = database.GetCollection<User>("users");
         }
 
-        public List<User> Get() =>
-            _users.Find(user => true).ToList();
+        public async Task<List<User>> Get()
+        {
+            var x = await _users.FindAsync(user => true);
+            return x.ToList();
+        }
+            
         
-        public User Get(string id) =>
-            _users.Find<User>(user => user.Id == id).FirstOrDefault();
+        public async Task<User> Get(string id)
+        {
+            var x = await _users.FindAsync<User>(user => user.Id == id);
+            return x.SingleOrDefault();
+        }
+            
 
-        //TODO: check if this is really ok and secure
-        public User Find(string email)
-            => _users.Find<User>(user => user.Email == email).FirstOrDefault();
+        public async Task<User> Find(string email)
+        {
+            var x = await _users.FindAsync<User>(user => user.Email == email);
+            return x.SingleOrDefault();
+        }
 
-        public User Create(User user)
+        public async Task<User> Create(User user)
         {
             user.Admin = false;
             user.Id = null;
-            _users.InsertOne(user);
+            await _users.InsertOneAsync(user);
             return user;
         }
 
-        public void Update(string id, User userIn) =>
-            _users.ReplaceOne(user => user.Id == id, userIn);
+        public async void Update(string id, User userIn) =>
+            await _users.ReplaceOneAsync(user => user.Id == id, userIn);
 
-        public void Remove(User userIn) =>
-            _users.DeleteOne(user => user.Id == userIn.Id);
+           
 
-        public void Remove(string id) =>
-            _users.DeleteOne(user => user.Id == id);
+        public async void Remove(User userIn) =>
+            await _users.DeleteOneAsync(user => user.Id == userIn.Id);
+
+        public async void Remove(string id) =>
+            await _users.DeleteOneAsync(user => user.Id == id);
     }
 }

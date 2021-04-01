@@ -16,17 +16,14 @@ namespace BlazorServer.Controllers.Tests
         [TestMethod()]
         public async Task RegisterTestAsync()
         {
-
-            var result = new AuthController(_userService).Register(user);
+            var result = await new AuthController(_userService).Register(user);
             Assert.AreEqual(typeof(Task<IActionResult>), result.GetType());
         }
 
         [TestMethod()]
         public async Task LoginTestAsync()
         {
-            var result = new AuthController(_userService).Login(user);
-            //Console.Write(result.GetType());
-            //Assert.IsInstanceOfType(typeof(Task<IActionResult>), result.GetType());
+            var result = await new AuthController(_userService).Login(user);
             Assert.AreEqual(typeof(Task<IActionResult>), result.GetType());
         }
     }
