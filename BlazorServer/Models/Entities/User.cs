@@ -6,13 +6,7 @@ namespace WebApplication1.Models
 {
     public class User : BaseEntity, IValidatableObject
     {
-        public User(){}
-
-        public User(string v1, string v2)
-        {
-            this.Email = v1;
-            this.Password = v2;
-        }
+        
 
         [Required]
         public string Email { get; set; }
@@ -23,6 +17,17 @@ namespace WebApplication1.Models
 
         public bool Admin { get; set; }
 
+        public User()
+        {
+            Email = "test@email.com";
+            Password = "testPassword1";
+        }
+
+        public User(string email, string password)
+        {
+            Email = email;
+            Password = password;
+        }
 
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
