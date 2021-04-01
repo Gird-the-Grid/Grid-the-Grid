@@ -6,6 +6,14 @@ namespace WebApplication1.Models
 {
     public class User : BaseEntity, IValidatableObject
     {
+        public User(){}
+
+        public User(string v1, string v2)
+        {
+            this.Email = v1;
+            this.Password = v2;
+        }
+
         [Required]
         public string Email { get; set; }
 

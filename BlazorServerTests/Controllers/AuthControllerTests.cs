@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using WebApplication1.Services;
 using WebApplication1.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BlazorServer.Controllers.Tests
 {
@@ -16,15 +17,22 @@ namespace BlazorServer.Controllers.Tests
         [TestMethod()]
         public async Task RegisterTestAsync()
         {
-            var result = await new AuthController(_userService).Register(user);
-            Assert.AreEqual(typeof(Task<IActionResult>), result.GetType());
+            //var result = await new AuthController(_userService).Register(user);
+            //Assert.AreEqual(typeof(ObjectResult), result.GetType
+            var authController = new AuthController(_userService);
+            var user = new User("_test", "_test");
+            var request = await authController.Register(user);
+            Assert.AreEqual(typeof(ObjectResult), request.GetType());
         }
 
         [TestMethod()]
         public async Task LoginTestAsync()
         {
-            var result = await new AuthController(_userService).Login(user);
-            Assert.AreEqual(typeof(Task<IActionResult>), result.GetType());
+            var authController = new AuthController(_userService);
+            var user = new User("_test", "_test");
+            var request = await authController.Login(user);
+            //Console.Write(request);
+            Assert.AreEqual(typeof(ObjectResult), request.GetType());
         }
     }
 }
