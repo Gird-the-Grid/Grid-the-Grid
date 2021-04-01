@@ -1,6 +1,6 @@
 ﻿namespace BlazorServer.Models.Responses
 {
-    public class BaseResponse : IResponse
+    public abstract class BaseResponse : IResponse
     {
         public bool Success;
 
@@ -8,5 +8,7 @@
         {
             Success = success;
         }
+
+        public abstract override string ToString();
     }
 }

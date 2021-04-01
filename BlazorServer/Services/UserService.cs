@@ -57,5 +57,6 @@ namespace WebApplication1.Services
 
         public async void Remove(string id) =>
             await _users.DeleteOneAsync(user => user.Id == id);
+
     }
 }
