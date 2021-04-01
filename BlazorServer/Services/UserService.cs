@@ -47,15 +47,15 @@ namespace WebApplication1.Services
             return user;
         }
 
-        public async void Update(string id, User userIn) =>
+        public async Task Update(string id, User userIn) =>
             await _users.ReplaceOneAsync(user => user.Id == id, userIn);
 
            
 
-        public async void Remove(User userIn) =>
+        public async Task Remove(User userIn) =>
             await _users.DeleteOneAsync(user => user.Id == userIn.Id);
 
-        public async void Remove(string id) =>
+        public async Task Remove(string id) =>
             await _users.DeleteOneAsync(user => user.Id == id);
 
     }
