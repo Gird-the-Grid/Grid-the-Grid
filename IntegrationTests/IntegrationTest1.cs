@@ -32,17 +32,18 @@ namespace IntegrationTests
 
         }
 
+        //PASS
         [Fact]
-        public async Task Check_Login_Return_Type()
+        public async Task AuthController_Return_Type()
         {
             var authController = new AuthController(_userService);
             var user = new User("_test", "_test");
-            var request = await authController.Register(user);
+            ObjectResult request = (ObjectResult)await authController.Register(user);
             Assert.Equal(typeof(ObjectResult), request.GetType());
         }
         //PASS
         [Fact]
-        public async Task Check_Login_Status_1()
+        public async Task Login_Success_StatusCode()
         {
             
             var request = await _client.PostAsJsonAsync("/auth/login", new { email = "first", password = "first" });
@@ -53,7 +54,7 @@ namespace IntegrationTests
 
         //PASS
         [Fact]
-        public async Task Check_Login_Status_2()
+        public async Task Login_False_StatusCode()
         {
 
             var request = await _client.PostAsJsonAsync("/auth/login", new { email = "_test", password = "_test" });
@@ -67,20 +68,20 @@ namespace IntegrationTests
 
         }
 
+        //PASS
+        [Fact]
+        public async Task Register_False_StatusCode()
+        {
+
+            var request = await _client.PostAsJsonAsync("/auth/register", new { email = "_test", password = "_test" });
+            //var forecast = await response.Content.ReadAsStringAsync();
+            Assert.NotEqual((int)StatusCodes.Status400BadRequest, (int)request.StatusCode);
+
+        }
+
         ////PASS
         //[Fact]
-        //public async Task Check_Register_Status_1()
-        //{
-
-        //    var request = await _client.PostAsJsonAsync("/auth/register", new { email = "_test", password = "_test" });
-        //    //var forecast = await response.Content.ReadAsStringAsync();
-        //    Assert.Equal((int)StatusCodes.Status400BadRequest, (int)request.StatusCode);
-
-        //}
-
-        ////PASS
-        //[Fact]
-        //public async Task Check_Register_Status_2()
+        //public async Task Register_Succes_StatusCode()
         //{
 
         //    var request = await _client.PostAsJsonAsync("/auth/register", new { email = "_test_reg", password = "_test_reg" });
