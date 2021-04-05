@@ -23,13 +23,13 @@ namespace BlazorServerAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUser user)
+        public async Task<IActionResult> Register([FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 //TODO: use FluentValidation
                 //TODO: Check if this ModelState refers to RegisterUser and not user
-                return BadRequest(new ErrorResponse(error: ModelState.ToString()));
+                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
             }
             try
             {

@@ -17,12 +17,8 @@ namespace BlazorServerAPI.Handlers
             _userService = userService;
         }
 
-        public async Task<IResponse> Register(RegisterUser user)
+        public async Task<IResponse> Register(User user)
         {
-            if (user.Password != user.Password2)
-            {
-                return new ErrorResponse(error: "Both passwords do not match");
-            }
             var hashedPassword = new PasswordHasher<object?>().HashPassword(null, user.Password);
             if (hashedPassword == null)
             {

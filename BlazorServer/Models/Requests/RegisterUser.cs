@@ -2,6 +2,7 @@
 
 namespace BlazorServerAPI.Models.Requests
 {
+    //TODO: to delete
     public class RegisterUser 
     {
         [Required]
@@ -9,8 +10,5 @@ namespace BlazorServerAPI.Models.Requests
 
         [Required]
         public string Password { get; set; }
-
-        [Required]
-        public string Password2 { get; set; }
     }
 }
