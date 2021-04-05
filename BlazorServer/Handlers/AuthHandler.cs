@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
-using WebApplication1.Models;
-using WebApplication1.Services;
-using BlazorServer.Models.Responses;
+using BlazorServerAPI.Services;
+using BlazorServerAPI.Models.Responses;
+using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Models.Requests;
 
-namespace BlazorServer.Handlers
+namespace BlazorServerAPI.Handlers
 {
     public class AuthHandler
     {
@@ -16,15 +17,19 @@ namespace BlazorServer.Handlers
             _userService = userService;
         }
 
-        public async Task<IResponse> Register(User user)
+        public async Task<IResponse> Register(RegisterUser user)
         {
-            var x = new PasswordHasher<object?>().HashPassword(null, user.Password);
-            if (x == null)
+            if (user.Password != user.Password2)
+            {
+                return new ErrorResponse(error: "Both passwords do not match");
+            }
+            var hashedPassword = new PasswordHasher<object?>().HashPassword(null, user.Password);
+            if (hashedPassword == null)
             {
                 throw new Exception("PasswordHasher failed, not enough entropy");
             }
-            user.Password = x;
-            await _userService.Create(user);
+            var newUser = new User(user.Email, hashedPassword);
+            await _userService.Create(newUser);
             return new MessageResponse("User created");
         }
 

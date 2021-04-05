@@ -1,6 +1,6 @@
 using System;
 
-namespace BlazorServer
+namespace BlazorServerAPI
 {
     public class WeatherForecast
     {

@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace BlazorServer.Models.Responses
+namespace BlazorServerAPI.Models.Responses
 {
     public class MessageResponse : BaseResponse
     {

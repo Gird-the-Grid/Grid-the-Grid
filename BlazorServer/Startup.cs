@@ -5,11 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using WebApplication1.Models;
-using WebApplication1.Services;
 using dotenv.net;
+using BlazorServerAPI.Models;
+using BlazorServerAPI.Services;
 
-namespace BlazorServer
+namespace BlazorServerAPI
 {
     public class Startup
     {
