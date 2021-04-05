@@ -41,20 +41,22 @@ else
     {
         public string username { get; set; }
         public string password { get; set; }
+        public string password2 { get; set; }
 
-        public RegisterPacket(string u, string p)
+        public RegisterPacket(string u, string p, string p2)
         {
             username = u;
             password = p;
+            password2 = p2;
         }
     }
 
     private async Task Send_registration()
     {
-        RegisterPacket rp = new RegisterPacket(registerModel.username, registerModel.password1);
+        RegisterPacket rp = new RegisterPacket(registerModel.username, registerModel.password1, registerModel.password2);
 
         //var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/register", lp); //other server
-        var r = await Http.PostAsJsonAsync("http://localhost:49429/auth/register", new { email = rp.username, password = rp.password }); // our server
+        var r = await Http.PostAsJsonAsync("http://localhost:49429/auth/register", new { email = rp.username, password = rp.password, password2 = rp.password2 }); // our server
         response = await r.Content.ReadAsStringAsync();
         logged = true;
 
