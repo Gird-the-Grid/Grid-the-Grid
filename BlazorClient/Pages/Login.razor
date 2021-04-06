@@ -1,13 +1,22 @@
 @page "/login"
 @inject HttpClient Http
+@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
-    <h2 class="h1-title"> Already a client? Login</h2>
+    @if (!sessionStorage.GetItem<bool>("logged"))
+    {
+        <h2 class="h1-title"> Already a client? Login</h2>
+    }
+    else
+    {
+        <br />
+        <h2 class="h1-title"> You're already logged in !</h2>
+    }
 </div>
 <br />
 
-@if (!logged)
+@if (!sessionStorage.GetItem<bool>("logged"))
 {
     <div class="flex-container" style="margin: 0 auto; display:flex; justify-content:center; width:50%">
         <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
@@ -21,17 +30,10 @@
         </EditForm>
     </div>
 }
-else
-{
-    <br />
-    <p>@response</p>
-}
 
 @code {
 
     private BlazorClient.Model.LoginModel loginModel = new BlazorClient.Model.LoginModel();
-
-    private bool logged = false;
 
     private string response;
 
@@ -53,8 +55,14 @@ else
 
         //var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/login", lp); // other server
         var r = await Http.PostAsJsonAsync("http://localhost:49429/auth/login", new { email = lp.username, password = lp.password }); // our server
+
         response = await r.Content.ReadAsStringAsync();
-        logged = true;
+
+        if (response.Contains("true"))
+        {
+            sessionStorage.SetItem<bool>("logged", true);
+        }
+        else sessionStorage.SetItem<bool>("logged", false);
 
         await InvokeAsync(() =>
         {
