@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlazorServerAPI.Models.Entities
@@ -30,13 +31,26 @@ namespace BlazorServerAPI.Models.Entities
 
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            var x = new System.Net.Mail.MailAddress(Email).ToString();
-            if (Email != x)
+            var emailOk = true;
+            try
+            {
+                var x = new System.Net.Mail.MailAddress(Email).ToString();
+                if (Email != x)
+                {
+                    emailOk = false;
+                }
+            } catch (Exception)
+            {
+                emailOk = false;
+            }
+            if (!emailOk)
             {
                 yield return new ValidationResult(
-                    $"Email not valid."
-                );
+                       $"Email not valid."
+                   );
             }
+            
+            
             if (Admin == true)
             {
                 yield return new ValidationResult(

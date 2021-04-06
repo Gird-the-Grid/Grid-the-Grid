@@ -2,7 +2,7 @@
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Requests;
 using BlazorServerAPI.Models.Responses;
-using BlazorServerAPI.Services;
+using BlazorServerAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,7 +17,7 @@ namespace BlazorServerAPI.Controllers
 
        private readonly AuthHandler _handler;
 
-       public AuthController(UserService userService)
+       public AuthController(UserRepository userService)
         {
             _handler = new AuthHandler(userService);
         }

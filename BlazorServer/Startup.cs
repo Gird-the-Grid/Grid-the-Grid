@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using dotenv.net;
 using BlazorServerAPI.Models;
-using BlazorServerAPI.Services;
+using BlazorServerAPI.Repository;
 
 namespace BlazorServerAPI
 {
@@ -40,7 +40,7 @@ namespace BlazorServerAPI
                 sp.GetRequiredService<IOptions<MongoDbSettings>>().Value
             );
 
-            services.AddSingleton<UserService>();
+            services.AddSingleton<UserRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

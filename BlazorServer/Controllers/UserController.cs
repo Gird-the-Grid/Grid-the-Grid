@@ -1,4 +1,4 @@
-﻿using BlazorServerAPI.Services;
+﻿using BlazorServerAPI.Repository;
 using dotenv.net;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace BlazorServerAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly UserRepository _userService;
 
-        public UserController(UserService userService)
+        public UserController(UserRepository userService)
         {
             _userService = userService;
             //TODO: Admin access to manage users
@@ -20,10 +20,10 @@ namespace BlazorServerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IDictionary<string, string>> DenyAccess ()
+        public async Task<IActionResult> DenyAccess ()
         {
-            var x = DotEnv.Read();
-            return x;
+            var x = await _userService.Get();
+            return Ok(x);
         }
 
     }

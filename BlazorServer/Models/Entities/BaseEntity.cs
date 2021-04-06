@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace BlazorServerAPI.Models.Entities
 {
     //TODO: find a way to add mandatory created_at and updated_at to controll data integrity
-    public class BaseEntity
+    public class BaseEntity : IBaseEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

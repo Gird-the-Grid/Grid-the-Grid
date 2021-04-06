@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
-using BlazorServerAPI.Services;
+using BlazorServerAPI.Repository;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Requests;
@@ -10,9 +10,9 @@ namespace BlazorServerAPI.Handlers
 {
     public class AuthHandler
     {
-        private readonly UserService _userService;
+        private readonly UserRepository _userService;
 
-        public AuthHandler(UserService userService)
+        public AuthHandler(UserRepository userService)
         {
             _userService = userService;
         }
@@ -25,14 +25,14 @@ namespace BlazorServerAPI.Handlers
                 throw new Exception("PasswordHasher failed, not enough entropy");
             }
             var newUser = new User(user.Email, hashedPassword);
-            await _userService.Create(newUser);
+            await _userService.CreateUser(newUser);
             return new MessageResponse("User created");
         }
 
         public async Task<IResponse> Login(User user)
         {
             //TODO: Get this through middleware to reject invalid requests
-            var result = await _userService.Find(user.Email);
+            var result = await _userService.FindUserByEmail(user.Email);
             if (result == null)
             {
                 return new ErrorResponse(error: "Invalid credentials");
