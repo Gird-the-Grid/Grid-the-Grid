@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BlazorServerAPI.Models.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -40,7 +41,7 @@ namespace BlazorServerAPI.Models.Entities
                 {
                     emailOk = false;
                 }
-            } catch (Exception)
+            } catch (InvalidEmailException)
             {
                 emailOk = false;
             }
@@ -58,6 +59,7 @@ namespace BlazorServerAPI.Models.Entities
                     $"Illegal argument \"Admin\"."
                 );
             }
+            //TODO: note[Ana]: maybe a class UserException(emailOk,passwordOk,adminOk) that throws Exceptions based of each atribute value
             //TODO: see how to throw error if Admin or other attributes are sent
             //TODO: Add custom messages to password validation
         }

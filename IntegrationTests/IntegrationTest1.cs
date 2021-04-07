@@ -6,16 +6,20 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
+using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Repository;
+using BlazorServerAPI.Controllers;
 
 namespace IntegrationTests
 {
     public class IntegrationTest1
     {
-        static readonly WebApplicationFactory<BlazorServer.Startup> _factory = new WebApplicationFactory<BlazorServer.Startup>();
+        static readonly WebApplicationFactory<BlazorServerAPI.Startup> _factory = new WebApplicationFactory<BlazorServerAPI.Startup>();
         static readonly HttpClient _client = _factory.CreateClient();
 
-        private readonly UserService _userService;
-        private readonly User user = new User();
+        private readonly UserRepository _userService;
+        private readonly User _existentUser = new User();
+        private readonly User _newUser = new User("first@mail.com", "testPassword1");
 
         //PASS
         [Fact]
@@ -34,8 +38,7 @@ namespace IntegrationTests
         public async Task AuthController_Return_Type()
         {
             var authController = new AuthController(_userService);
-            var user = new User("_test", "_test");
-            ObjectResult request = (ObjectResult)await authController.Register(user);
+            ObjectResult request = (ObjectResult)await authController.Register(_newUser);
             Assert.Equal(typeof(ObjectResult), request.GetType());
         }
         //PASS
@@ -43,7 +46,7 @@ namespace IntegrationTests
         public async Task Login_Success_StatusCode()
         {
             
-            var request = await _client.PostAsJsonAsync("/auth/login", new { email = "first", password = "first" });
+            var request = await _client.PostAsJsonAsync("/auth/login", _existentUser);
             //var forecast = await response.Content.ReadAsStringAsync();
             Assert.NotEqual((int)StatusCodes.Status200OK, (int)request.StatusCode);
 
@@ -54,7 +57,7 @@ namespace IntegrationTests
         public async Task Login_False_StatusCode()
         {
 
-            var request = await _client.PostAsJsonAsync("/auth/login", new { email = "_test", password = "_test" });
+            var request = await _client.PostAsJsonAsync("/auth/login", _newUser);
             var response = await request.Content.ReadAsStringAsync();
             Console.Write(response.ToString());
             Assert.NotEqual((int)StatusCodes.Status200OK, (int)request.StatusCode);
@@ -70,7 +73,7 @@ namespace IntegrationTests
         public async Task Register_False_StatusCode()
         {
 
-            var request = await _client.PostAsJsonAsync("/auth/register", new { email = "_test", password = "_test" });
+            var request = await _client.PostAsJsonAsync("/auth/register", _existentUser);
             //var forecast = await response.Content.ReadAsStringAsync();
             Assert.NotEqual((int)StatusCodes.Status400BadRequest, (int)request.StatusCode);
 
@@ -81,7 +84,7 @@ namespace IntegrationTests
         //public async Task Register_Succes_StatusCode()
         //{
 
-        //    var request = await _client.PostAsJsonAsync("/auth/register", new { email = "_test_reg", password = "_test_reg" });
+        //    var request = await _client.PostAsJsonAsync("/auth/register", _newUser });
         //    //var forecast = await response.Content.ReadAsStringAsync();
         //    Assert.Equal((int)StatusCodes.Status200OK, (int)request.StatusCode);
 

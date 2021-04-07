@@ -1,5 +1,6 @@
 ﻿using BlazorServerAPI.Handlers;
 using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Models.Exceptions;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
 using Microsoft.AspNetCore.Http;
@@ -35,11 +36,12 @@ namespace BlazorServerAPI.Controllers
                 var x = await _handler.Register(user);
                 return StatusCode(StatusCodes.Status201Created, x.ToString());
             }
+            //TODO: maybe, maybe make a custom exception class for this exception
             catch (MongoDB.Driver.MongoWriteException)
             {
                 return BadRequest(new ErrorResponse(error: "Email used").ToString());
             }
-            catch (Exception e)
+            catch (ServerException e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -57,7 +59,7 @@ namespace BlazorServerAPI.Controllers
                 var x = await _handler.Login(user);
                 return StatusCode(StatusCodes.Status202Accepted, x.ToString());
             }
-            catch (Exception e)
+            catch (ServerException e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }

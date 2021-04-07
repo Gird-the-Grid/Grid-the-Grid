@@ -9,6 +9,7 @@ using System.Text;
 using dotenv.net;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using BlazorServerAPI.Models.Exceptions;
 
 namespace BlazorServerAPI.Handlers
 {
@@ -26,7 +27,7 @@ namespace BlazorServerAPI.Handlers
             var hashedPassword = new PasswordHasher<object?>().HashPassword(null, user.Password);
             if (hashedPassword == null)
             {
-                throw new Exception("PasswordHasher failed, not enough entropy");
+                throw new InvalidPasswordException("PasswordHasher failed, not enough entropy");
             }
             var newUser = new User(user.Email, hashedPassword);
             await _userService.CreateUser(newUser);
@@ -50,7 +51,7 @@ namespace BlazorServerAPI.Handlers
             {
                 return new LoginResponse(token: generateJwtToken(result));
             }
-            throw new Exception(passwordVerificationResult.ToString());
+            throw new InvalidPasswordException(passwordVerificationResult.ToString());
         }
 
         private string generateJwtToken(User user)
