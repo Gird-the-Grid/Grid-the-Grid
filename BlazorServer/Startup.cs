@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using dotenv.net;
 using BlazorServerAPI.Models;
 using BlazorServerAPI.Repository;
+using BlazorServerAPI.Middlewares;
 
 namespace BlazorServerAPI
 {
@@ -66,6 +67,14 @@ namespace BlazorServerAPI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseWhen(
+                context => !context.Request.Path.StartsWithSegments("/auth"),
+                appBuilder =>
+                {
+                    appBuilder.UseMiddleware<JwtMiddleware>();
+                }
+            );
 
             app.UseEndpoints(endpoints =>
             {

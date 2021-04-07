@@ -1,10 +1,8 @@
 ﻿using BlazorServerAPI.Models;
-using BlazorServerAPI.Models.Entities;
 using dotenv.net;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Data.Entity;
 using System.Linq;
 
 namespace BlazorServerAPI.Repository

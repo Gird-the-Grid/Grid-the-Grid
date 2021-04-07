@@ -1,7 +1,5 @@
 ﻿using BlazorServerAPI.Repository;
-using dotenv.net;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Controllers
@@ -22,8 +20,9 @@ namespace BlazorServerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> DenyAccess ()
         {
+            var y = HttpContext.Items["UserId"];
             var x = await _userService.Get();
-            return Ok(x);
+            return Ok(y);
         }
 
     }

@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using BlazorServer.Controllers;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
-using WebApplication1.Services;
-using WebApplication1.Models;
 
 namespace IntegrationTests
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -59,6 +60,11 @@ namespace BlazorServerAPI.Models.Entities
             }
             //TODO: see how to throw error if Admin or other attributes are sent
             //TODO: Add custom messages to password validation
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

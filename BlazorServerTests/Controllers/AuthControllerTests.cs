@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
-using WebApplication1.Services;
-using WebApplication1.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorServer.Controllers.Tests
