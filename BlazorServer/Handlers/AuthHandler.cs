@@ -5,6 +5,11 @@ using BlazorServerAPI.Repository;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Requests;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using dotenv.net;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace BlazorServerAPI.Handlers
 {
@@ -44,9 +49,23 @@ namespace BlazorServerAPI.Handlers
             }
             if (passwordVerificationResult == PasswordVerificationResult.Success)
             {
-                return new LoginResponse(token: "None");
+                return new LoginResponse(token: generateJwtToken(result));
             }
             throw new Exception(passwordVerificationResult.ToString());
+        }
+
+        private string generateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(DotEnv.Read()["SECRET"].PadLeft(32));
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id) }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace BlazorServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
             }
             try
             {
