@@ -1,4 +1,4 @@
-﻿using BlazorServerAPI.Models.Exceptions;
+﻿using BlazorServerAPI.Utils.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

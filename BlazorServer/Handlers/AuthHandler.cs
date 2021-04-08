@@ -9,7 +9,7 @@ using System.Text;
 using dotenv.net;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using BlazorServerAPI.Models.Exceptions;
+using BlazorServerAPI.Utils.Exceptions;
 
 namespace BlazorServerAPI.Handlers
 {

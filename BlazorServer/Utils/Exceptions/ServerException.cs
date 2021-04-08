@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorServerAPI.Models.Exceptions
+namespace BlazorServerAPI.Utils.Exceptions
 {
     [Serializable]
     public class ServerException : Exception

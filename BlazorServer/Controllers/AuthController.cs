@@ -1,8 +1,8 @@
 ﻿using BlazorServerAPI.Handlers;
 using BlazorServerAPI.Models.Entities;
-using BlazorServerAPI.Models.Exceptions;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
+using BlazorServerAPI.Utils.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

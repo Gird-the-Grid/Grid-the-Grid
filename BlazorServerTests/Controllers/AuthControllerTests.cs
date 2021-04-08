@@ -1,13 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using BlazorServerAPI.Repository;
+using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Controllers;
 
 namespace BlazorServer.Controllers.Tests
 {
     [TestClass()]
     public class AuthControllerTests
     {
-        private readonly UserService _userService;
+        private readonly UserRepository _userService;
         private readonly User user = new User();
 
 
