@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using MongoDB.Bson;
 
 namespace BlazorServerAPI.Repository
 {
@@ -35,20 +36,20 @@ namespace BlazorServerAPI.Repository
         //TODO: check that all bellow work with users (test on UserController or WeatherController)
         public async Task<T> Get(string id)
         {
-            var filter = Builders<T>.Filter.Eq("id", id);
+            var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
             var x = await _documents.FindAsync<T>(filter);
             return x.SingleOrDefault();
         }
 
         public async Task Update(string id, T documentIn)
         {
-            var filter = Builders<T>.Filter.Eq("id", id);
+            var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
             await _documents.ReplaceOneAsync(filter, documentIn);
         }
 
         public async Task Remove(string id)
         {
-            var filter = Builders<T>.Filter.Eq("id", id);
+            var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
             await _documents.DeleteOneAsync(filter);
         }
     }

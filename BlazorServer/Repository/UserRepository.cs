@@ -26,5 +26,16 @@ namespace BlazorServerAPI.Repository
             return user;
         }
 
+        public async Task<User> ConfirmUser(string userId)
+        {
+            var unconfirmedUser = (await _documents.FindAsync<User>(user => user.Id == userId && !user.Activated)).SingleOrDefault();
+            if (unconfirmedUser != null)
+            {
+                unconfirmedUser.Activated = true;
+                await Update(userId, unconfirmedUser);
+            }
+            return unconfirmedUser;
+        }
+
     }
 }

@@ -10,16 +10,20 @@ using dotenv.net;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using BlazorServerAPI.Utils.Exceptions;
+using BlazorServerAPI.Services;
+using BlazorServerAPI.Models;
 
 namespace BlazorServerAPI.Handlers
 {
     public class AuthHandler
     {
         private readonly UserRepository _userService;
+        private readonly IMailService _mailService;
 
-        public AuthHandler(UserRepository userService)
+        public AuthHandler(UserRepository userService, IMailService mailService)
         {
             _userService = userService;
+            _mailService = mailService;
         }
 
         public async Task<IResponse> Register(User user)
@@ -30,8 +34,9 @@ namespace BlazorServerAPI.Handlers
                 throw new InvalidPasswordException("PasswordHasher failed, not enough entropy");
             }
             var newUser = new User(user.Email, hashedPassword);
-            await _userService.CreateUser(newUser);
-            return new MessageResponse("User created");
+            newUser = await _userService.CreateUser(newUser);
+            await _mailService.SendEmailAsync(new ConfirmRegistrationMailRequest(newUser.Email, newUser.Id));
+            return new MessageResponse("User created. Confirmation Mail Sent.");
         }
 
         public async Task<IResponse> Login(User user)
@@ -52,6 +57,16 @@ namespace BlazorServerAPI.Handlers
                 return new LoginResponse(token: generateJwtToken(result));
             }
             throw new InvalidPasswordException(passwordVerificationResult.ToString());
+        }
+
+        public async Task<IResponse> Confirm(string userId)
+        {
+            var user = await _userService.ConfirmUser(userId);
+            if (user == null)
+            {
+                return new ErrorResponse(error: "Invalid confirmation link. Link may have expired.");
+            }
+            return new MessageResponse("User confirmed.");
         }
 
         private string generateJwtToken(User user)
