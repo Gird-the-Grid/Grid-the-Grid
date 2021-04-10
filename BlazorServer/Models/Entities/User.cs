@@ -19,16 +19,20 @@ namespace BlazorServerAPI.Models.Entities
 
         public bool Admin { get; set; }
 
+        public bool Activated { get; set; }
+
         public User()
         {
             Email = "test@email.com";
             Password = "testPassword1";
         }
 
-        public User(string email, string password)
+        public User(string email, string password) : base()
         {
             Email = email;
             Password = password;
+            Admin = false;
+            Activated = false;
         }
 
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)

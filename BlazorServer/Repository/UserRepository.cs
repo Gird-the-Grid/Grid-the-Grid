@@ -14,14 +14,14 @@ namespace BlazorServerAPI.Repository
 
         public async Task<User> FindUserByEmail(string email)
         {
-            var x = await _documents.FindAsync<User>(user => user.Email == email);
+            var x = await _documents.FindAsync<User>(user => user.Email == email && user.Activated);
             return x.SingleOrDefault();
         }
 
         public async Task<User> CreateUser(User user)
         {
-            user.Admin = false;
-            user.Id = null;
+            user.Admin = false; //TODO: remove, not needed
+            user.Id = null; 
             await _documents.InsertOneAsync(user);
             return user;
         }
