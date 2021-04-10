@@ -9,6 +9,8 @@ using dotenv.net;
 using BlazorServerAPI.Models;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Middlewares;
+using BlazorServerAPI.Settings;
+using BlazorServerAPI.Services;
 
 namespace BlazorServerAPI
 {
@@ -36,6 +38,10 @@ namespace BlazorServerAPI
             services.Configure<MongoDbSettings>(
                 Configuration.GetSection(nameof(MongoDbSettings))
             );
+
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
+            services.AddTransient<IMailService, Services.MailService>();
 
             services.AddSingleton<IMongoDbSettings>(sp =>
                 sp.GetRequiredService<IOptions<MongoDbSettings>>().Value
