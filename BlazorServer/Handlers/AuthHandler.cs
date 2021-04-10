@@ -10,20 +10,16 @@ using dotenv.net;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using BlazorServerAPI.Utils.Exceptions;
-using BlazorServerAPI.Services;
-using BlazorServerAPI.Models;
 
 namespace BlazorServerAPI.Handlers
 {
     public class AuthHandler
     {
         private readonly UserRepository _userService;
-        private readonly IMailService _mailService;
 
-        public AuthHandler(UserRepository userService, IMailService mailService)
+        public AuthHandler(UserRepository userService)
         {
             _userService = userService;
-            _mailService = mailService;
         }
 
         public async Task<IResponse> Register(User user)
@@ -34,9 +30,8 @@ namespace BlazorServerAPI.Handlers
                 throw new InvalidPasswordException("PasswordHasher failed, not enough entropy");
             }
             var newUser = new User(user.Email, hashedPassword);
-            newUser = await _userService.CreateUser(newUser);
-            await _mailService.SendEmailAsync(new ConfirmRegistrationMailRequest(newUser.Email, newUser.Id)); //TODO: test this
-            return new MessageResponse("User created. Confirmation Mail Sent");
+            await _userService.CreateUser(newUser);
+            return new MessageResponse("User created");
         }
 
         public async Task<IResponse> Login(User user)

@@ -2,10 +2,10 @@
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
-using BlazorServerAPI.Services;
 using BlazorServerAPI.Utils.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Controllers
@@ -17,9 +17,9 @@ namespace BlazorServerAPI.Controllers
 
        private readonly AuthHandler _handler;
 
-       public AuthController(UserRepository userService, IMailService mailService)
+       public AuthController(UserRepository userService)
         {
-            _handler = new AuthHandler(userService, mailService);
+            _handler = new AuthHandler(userService);
         }
 
         [HttpPost("register")]
