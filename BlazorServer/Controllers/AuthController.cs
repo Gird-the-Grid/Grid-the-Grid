@@ -28,7 +28,6 @@ namespace BlazorServerAPI.Controllers
             if (!ModelState.IsValid)
             {
                 //TODO: use FluentValidation
-                //TODO: Check if this ModelState refers to RegisterUser and not user
                 return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
             }
             try
@@ -36,7 +35,6 @@ namespace BlazorServerAPI.Controllers
                 var x = await _handler.Register(user);
                 return StatusCode(StatusCodes.Status201Created, x.ToString());
             }
-            //TODO: maybe, maybe make a custom exception class for this exception
             catch (MongoDB.Driver.MongoWriteException)
             {
                 return BadRequest(new ErrorResponse(error: "Email used").ToString());
@@ -45,6 +43,8 @@ namespace BlazorServerAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
+            //TODO: Add general exception
+
         }
 
         [HttpPost("login")]

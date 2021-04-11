@@ -4,7 +4,7 @@ using System;
 
 namespace BlazorServerAPI.Models.Entities
 {
-    //TODO: find a way to add mandatory created_at and updated_at to controll data integrity
+    //TODO: do update updated_at when updating entity
     public class BaseEntity : IBaseEntity
     {
         [BsonId]

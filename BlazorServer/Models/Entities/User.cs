@@ -63,8 +63,6 @@ namespace BlazorServerAPI.Models.Entities
                 );
             }
             //TODO: note[Ana]: maybe a class UserException(emailOk,passwordOk,adminOk) that throws Exceptions based of each atribute value
-            //TODO: see how to throw error if Admin or other attributes are sent
-            //TODO: Add custom messages to password validation
         }
 
         public override string ToString()

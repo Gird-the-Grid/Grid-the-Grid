@@ -2,8 +2,8 @@
 
 namespace BlazorServerAPI.Models.Requests
 {
-    //TODO: to delete
-    public class RegisterUser 
+    //TODO: to delete if not needed anymore
+    public class RegisterUserRequest 
     {
         [Required]
         public string Email { get; set; }

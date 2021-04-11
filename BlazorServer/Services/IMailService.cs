@@ -1,4 +1,4 @@
-﻿using BlazorServerAPI.Models;
+﻿using BlazorServerAPI.Models.Requests;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Services

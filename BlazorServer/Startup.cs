@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using dotenv.net;
-using BlazorServerAPI.Models;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Middlewares;
 using BlazorServerAPI.Settings;

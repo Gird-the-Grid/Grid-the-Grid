@@ -1,10 +1,10 @@
-﻿using BlazorServerAPI.Models;
-using dotenv.net;
+﻿using dotenv.net;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using MongoDB.Bson;
+using BlazorServerAPI.Settings;
 
 namespace BlazorServerAPI.Repository
 {

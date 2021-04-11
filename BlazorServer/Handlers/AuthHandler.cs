@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using BlazorServerAPI.Utils.Exceptions;
 using BlazorServerAPI.Services;
-using BlazorServerAPI.Models;
+using BlazorServerAPI.Models.Requests;
 
 namespace BlazorServerAPI.Handlers
 {
@@ -41,7 +41,6 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> Login(User user)
         {
-            //TODO: Get this through middleware to reject invalid requests
             var result = await _userService.FindUserByEmail(user.Email);
             if (result == null)
             {

@@ -1,5 +1,5 @@
-﻿using BlazorServerAPI.Models;
-using BlazorServerAPI.Models.Entities;
+﻿using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Settings;
 using MongoDB.Driver;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +20,6 @@ namespace BlazorServerAPI.Repository
 
         public async Task<User> CreateUser(User user)
         {
-            user.Admin = false; //TODO: remove, not needed
             user.Id = null; 
             await _documents.InsertOneAsync(user);
             return user;

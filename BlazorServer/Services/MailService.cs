@@ -1,4 +1,4 @@
-﻿using BlazorServerAPI.Models;
+﻿using BlazorServerAPI.Models.Requests;
 using BlazorServerAPI.Settings;
 using dotenv.net;
 using MailKit.Net.Smtp;
