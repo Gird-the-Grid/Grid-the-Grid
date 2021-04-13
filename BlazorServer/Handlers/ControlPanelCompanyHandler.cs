@@ -34,6 +34,7 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> GetCompanyConfiguration(string userId)
         {
+
             throw new NotImplementedException();
         }
     }
