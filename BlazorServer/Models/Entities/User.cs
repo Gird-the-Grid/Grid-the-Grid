@@ -36,8 +36,8 @@ namespace BlazorServerAPI.Models.Entities
             var emailOk = true;
             try
             {
-                var x = new System.Net.Mail.MailAddress(Email).ToString();
-                if (Email != x)
+                var emailValidFormat = new System.Net.Mail.MailAddress(Email).ToString();
+                if (Email != emailValidFormat)
                 {
                     emailOk = false;
                 }

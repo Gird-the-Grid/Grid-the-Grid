@@ -9,6 +9,7 @@ using Xunit;
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Controllers;
+using BlazorServerAPI.Services;
 
 namespace IntegrationTests
 {
@@ -20,6 +21,7 @@ namespace IntegrationTests
         private readonly UserRepository _userService;
         private readonly User _existentUser = new User();
         private readonly User _newUser = new User("first@mail.com", "testPassword1");
+        private readonly IMailService mailService;
 
         //PASS
         [Fact]
@@ -37,7 +39,7 @@ namespace IntegrationTests
         [Fact]
         public async Task AuthController_Return_Type()
         {
-            var authController = new AuthController(_userService);
+            var authController = new AuthController(_userService,mailService);
             ObjectResult request = (ObjectResult)await authController.Register(_newUser);
             Assert.Equal(typeof(ObjectResult), request.GetType());
         }

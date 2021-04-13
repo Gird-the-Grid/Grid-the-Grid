@@ -24,16 +24,16 @@ namespace BlazorServerAPI.Repository
 
         public async Task<List<T>> Get()
         {
-            var x = await _documents.FindAsync<T>(document => true);
-            return x.ToList();
+            var entityDocs = await _documents.FindAsync<T>(document => true);
+            return entityDocs.ToList();
         }
 
         //TODO: check that all bellow work with users (test on UserController or WeatherController)
         public async Task<T> Get(string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
-            var x = await _documents.FindAsync<T>(filter);
-            return x.SingleOrDefault();
+            var docsFilteredById = await _documents.FindAsync<T>(filter);
+            return docsFilteredById.SingleOrDefault();
         }
 
         public async Task Update(string id, T documentIn)

@@ -20,9 +20,9 @@ namespace BlazorServerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> DenyAccess ()
         {
-            var y = HttpContext.Items["UserId"];
-            var x = await _userService.Get();
-            return Ok(y);
+            var userItems = HttpContext.Items["UserId"];
+            var userServiceDetails = await _userService.Get();
+            return Ok(userItems);
         }
 
     }
