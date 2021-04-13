@@ -16,6 +16,7 @@ namespace BlazorServerAPI.Models.Entities
         public string Country { get; set; }
         [Required]
         public float TaxRates { get; set; }
+        public string OwnerId { get; set; }
 
         public CompanyModel(string companyName, string cin, string country, float taxRates) : base()
         {

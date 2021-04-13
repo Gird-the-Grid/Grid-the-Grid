@@ -19,12 +19,11 @@ namespace BlazorServerAPI.Controllers
         private readonly ControlPanelCompanyHandler _companyHandler;
         private readonly ControlPanelGridHandler _gridHandler;
 
-        public ControlPanelController()
+        public ControlPanelController(CompanyRepository companyRepository, GridRepository gridRepository)
         {
-            //TODO: Add CompanyRepository and GridRepository
             //TODO: Add delete routes with id for copany configuration and grid parameters
-            _companyHandler = new ControlPanelCompanyHandler();
-            _gridHandler = new ControlPanelGridHandler();
+            _companyHandler = new ControlPanelCompanyHandler(companyRepository);
+            _gridHandler = new ControlPanelGridHandler(gridRepository);
         }
 
         [HttpPost("configuration")]
@@ -37,6 +36,7 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
+                companyConfiguration.OwnerId = HttpContext.Items["UserId"].ToString();
                 var response = await _companyHandler.CreateCompanyConfiguration(companyConfiguration);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
             }

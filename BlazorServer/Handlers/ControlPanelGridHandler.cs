@@ -1,5 +1,6 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Responses;
+using BlazorServerAPI.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,11 @@ namespace BlazorServerAPI.Handlers
 {
     public class ControlPanelGridHandler
     {
-        public ControlPanelGridHandler()
+        private readonly GridRepository _gridRepository;
+
+        public ControlPanelGridHandler(GridRepository gridRepository)
         {
-            //TODO: Add GridRepository
+            _gridRepository = gridRepository;
         }
         public async Task<IResponse> CreateGridParameters(GridModel gridParameters)
         {
