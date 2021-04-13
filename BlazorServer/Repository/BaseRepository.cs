@@ -5,18 +5,13 @@ using System.Threading.Tasks;
 using System.Linq;
 using MongoDB.Bson;
 using BlazorServerAPI.Settings;
+using System;
+using BlazorServerAPI.Models.Entities;
 
 namespace BlazorServerAPI.Repository
 {
-    public class BaseRepository<T>
+    public class BaseRepository<T> where T : IBaseEntity
     {
-        //TODO: firststef: Aici am implementat repository-uld e baza folosind un template, dar are anumite dezavantaje:
-        // - nu poti pune ca parametru un template si sa ii accesezi elementele (doc.Id) pentru ca nu are asa ceva
-        //Am incercat sa implementez asta si folosind in loc de T BaseEntity si IBaseEntity, 
-        // dar nu am reusit pentru ca nu ma lasa sa fac cast la tipul care voiam eu (in User Repository)
-        //  - asta probabil se poate rezolva dolosind Builders, cum am facut mai jos
-        // si nu ma lasa in User Repository sa accesez doc.Email pt ca BaseEntity nu are definitie pentru email
-        //  - dar este probabil ca si asta sa se poata rezolva folosind Buildere in loc de lambda functii pentru filtrare
 
         protected readonly IMongoCollection<T> _documents;
 
@@ -44,6 +39,7 @@ namespace BlazorServerAPI.Repository
         public async Task Update(string id, T documentIn)
         {
             var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
+            documentIn.UpdatedAt = DateTime.Now;
             await _documents.ReplaceOneAsync(filter, documentIn);
         }
 

@@ -48,6 +48,10 @@ namespace BlazorServerAPI
 
             services.AddSingleton<UserRepository>();
 
+            services.AddSingleton<GridRepository>();
+
+            services.AddSingleton<CompanyRepository>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

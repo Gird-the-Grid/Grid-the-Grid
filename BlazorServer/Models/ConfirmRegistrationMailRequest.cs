@@ -1,6 +1,7 @@
 ﻿namespace BlazorServerAPI.Models
 {
     public class ConfirmRegistrationMailRequest : MailRequest
+        //TODO: delet this
     {
         public ConfirmRegistrationMailRequest(string email, string userId) : base(toEmail: email, subject: "Confirm your account on Gird the Grid", body: ConfirmRegistrationBodyBuilder(userId), attachments: null)
         { }

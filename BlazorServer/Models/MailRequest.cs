@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 namespace BlazorServerAPI.Models
 {
+    //TODO delet this
     public class MailRequest
     {
         public string ToEmail { get; set; }

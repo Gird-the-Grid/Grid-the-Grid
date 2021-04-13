@@ -20,11 +20,8 @@ namespace BlazorServerAPI.Models.Entities
 
         public bool Activated { get; set; }
 
-        public User()
-        {
-            Email = "test@email.com";
-            Password = "testPassword1";
-        }
+        public User() : this( "test@email.com", "testPassword1")
+        { }
 
         public User(string email, string password) : base()
         {
@@ -52,7 +49,7 @@ namespace BlazorServerAPI.Models.Entities
             {
                 yield return new ValidationResult(
                        $"Email not valid."
-                   );
+                );
             }
             
             
