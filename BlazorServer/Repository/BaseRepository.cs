@@ -28,7 +28,6 @@ namespace BlazorServerAPI.Repository
             return x.ToList();
         }
 
-        //TODO: check that all bellow work with users (test on UserController or WeatherController)
         public async Task<T> Get(string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));

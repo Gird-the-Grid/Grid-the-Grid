@@ -21,7 +21,7 @@ namespace BlazorServerAPI.Controllers
 
         public ControlPanelController(CompanyRepository companyRepository, GridRepository gridRepository)
         {
-            //TODO: Add delete routes with id for copany configuration and grid parameters
+            //TODO: Add delete routes with id for company configuration and grid parameters
             _companyHandler = new ControlPanelCompanyHandler(companyRepository);
             _gridHandler = new ControlPanelGridHandler(gridRepository);
         }
@@ -84,7 +84,6 @@ namespace BlazorServerAPI.Controllers
         [HttpGet("configuration")]
         public async Task<IActionResult> GetCompanyConfiguration(string userId)
         {
-            //TODO: here we should check that userId is the same as jwt, otherwise refuse
             try
             {
                 if (userId != HttpContext.Items["UserId"].ToString())
