@@ -66,7 +66,7 @@ namespace BlazorServerAPI.Controllers
             {
                 if (companyConfiguration.OwnerId != HttpContext.Items["UserId"].ToString())
                 {
-                    throw new ServerException("Resource forbidden");
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource"));
                 }
                 var response = await _companyHandler.UpdateCompanyConfiguration(companyConfiguration);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
@@ -87,6 +87,10 @@ namespace BlazorServerAPI.Controllers
             //TODO: here we should check that userId is the same as jwt, otherwise refuse
             try
             {
+                if (userId != HttpContext.Items["UserId"].ToString())
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource"));
+                }
                 var companyConfiguration = await _companyHandler.GetCompanyConfiguration(userId);
                 return StatusCode(StatusCodes.Status200OK, companyConfiguration.ToString());
             }

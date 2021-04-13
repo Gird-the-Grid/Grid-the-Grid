@@ -34,7 +34,12 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> GetCompanyConfiguration(string userId)
         {
-            throw new NotImplementedException();
+            var companyConfiguration = await _companyRepository.GetCompany(userId);
+            if (companyConfiguration == null)
+            {
+                return new ErrorResponse(error: "company has no configuration");
+            }
+            return new MessageResponse(companyConfiguration.ToString());
         }
     }
 }

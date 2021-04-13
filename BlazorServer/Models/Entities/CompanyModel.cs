@@ -38,5 +38,10 @@ namespace BlazorServerAPI.Models.Entities
                 );
             }
         }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
