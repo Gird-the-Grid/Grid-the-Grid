@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers
 {
-    public class ControlPanelHandler
+    public class ControlPanelGridHandler
     {
-        public ControlPanelHandler()
+        public ControlPanelGridHandler()
         {
-            //TODO: Add CompanyRepository and GridRepository
+            //TODO: Add GridRepository
         }
-        public async Task<IResponse> CreateCompanyConfiguration(CompanyModel companyConfiguration)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public async Task<IResponse> UpdateCompanyConfiguration(CompanyModel companyConfiguration)
+        public async Task<IResponse> CreateGridParameters(GridModel gridParameters)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IResponse> GetCompanyConfiguration(string userId)
+        public async Task<IResponse> UpdateGridParameters(GridModel gridParameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IResponse> GetGridParameters(string gridId)
         {
             throw new NotImplementedException();
         }

@@ -16,12 +16,15 @@ namespace BlazorServerAPI.Controllers
     [ApiController]
     public class ControlPanelController : ControllerBase
     {
-        private readonly ControlPanelHandler _handler;
+        private readonly ControlPanelCompanyHandler _companyHandler;
+        private readonly ControlPanelGridHandler _gridHandler;
 
         public ControlPanelController()
         {
             //TODO: Add CompanyRepository and GridRepository
-            _handler = new ControlPanelHandler();
+            //TODO: Add delete routes with id for copany configuration and grid parameters
+            _companyHandler = new ControlPanelCompanyHandler();
+            _gridHandler = new ControlPanelGridHandler();
         }
 
         [HttpPost("configuration")]
@@ -34,7 +37,7 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
-                var response = await _handler.CreateCompanyConfiguration(companyConfiguration);
+                var response = await _companyHandler.CreateCompanyConfiguration(companyConfiguration);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
             }
             catch (Exception e)
@@ -52,7 +55,7 @@ namespace BlazorServerAPI.Controllers
         }
 
         [HttpPut("configuration")]
-        public async Task<IActionResult> ChangeCompanyConfiguration([FromBody] CompanyModel companyConfiguration)
+        public async Task<IActionResult> UpdateCompanyConfiguration([FromBody] CompanyModel companyConfiguration)
         {
             if (!ModelState.IsValid)
             {
@@ -61,8 +64,8 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
-                var response = await _handler.CreateCompanyConfiguration(companyConfiguration);
-                return StatusCode(StatusCodes.Status201Created, response.ToString());
+                var response = await _companyHandler.UpdateCompanyConfiguration(companyConfiguration);
+                return StatusCode(StatusCodes.Status200OK, response.ToString());
             }
             catch (Exception e)
             {
@@ -77,14 +80,85 @@ namespace BlazorServerAPI.Controllers
         [HttpGet("configuration")]
         public async Task<IActionResult> GetCompanyConfiguration(string userId)
         {
+            //TODO: here we should check that userId is the same as jwt, otherwise refuse
             try
             {
-                var companyConfiguration = await _handler.GetCompanyConfiguration(userId);
+                var companyConfiguration = await _companyHandler.GetCompanyConfiguration(userId);
                 return StatusCode(StatusCodes.Status200OK, companyConfiguration.ToString());
             }
             catch (Exception e)
             {
                 //TODO: add exception for when userId doesn't exist
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
+        [HttpPost("grid")]
+        public async Task<IActionResult> CreateGridParameters([FromBody] GridModel gridParameters)
+        {
+            
+            if (!ModelState.IsValid)
+            {
+                //TODO: use FluentValidation
+                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
+            }
+            try
+            {
+                var response = await _gridHandler.CreateGridParameters(gridParameters);
+                return StatusCode(StatusCodes.Status201Created, response.ToString());
+            }
+            catch (Exception e)
+            {
+                //TODO: question: can we create more grids for one user? if so then we should allow more posts and make put requests with gridId and not userId
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
+        [HttpPut("grid")]
+        public async Task<IActionResult> UpdateGridParameters([FromBody] GridModel gridParameters)
+        {
+            //TODO: here we should check that gridParameters.id is owned by userId from jwt, otherwise refuse
+            if (!ModelState.IsValid)
+            {
+                //TODO: use FluentValidation
+                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
+            }
+            try
+            {
+                var response = await _gridHandler.UpdateGridParameters(gridParameters);
+                return StatusCode(StatusCodes.Status200OK, response.ToString());
+            }
+            catch (Exception e)
+            {
+                //TODO: question: can we create more grids for one user? if so then we should allow more posts and make put requests with gridId and not userId
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
+        [HttpGet("grid")]
+        public async Task<IActionResult> GetGridParameters(string gridId)
+        {
+            //TODO: here we should check that gridId is owned by userId from jwt, otherwise refuse
+            try
+            {
+                var gridParameters = await _gridHandler.GetGridParameters(gridId);
+                return StatusCode(StatusCodes.Status200OK, gridParameters.ToString());
+            }
+            catch (Exception e)
+            {
+                //TODO: add exception for when gridId doesn't exist
                 if (e is ServerException)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
