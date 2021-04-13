@@ -17,7 +17,7 @@ namespace BlazorServerAPI.Controllers
 
        private readonly AuthHandler _handler;
 
-       public AuthController(UserRepository userService, IMailService mailService)
+        public AuthController(UserRepository userService, IMailService mailService)
         {
             _handler = new AuthHandler(userService, mailService);
         }
@@ -44,7 +44,6 @@ namespace BlazorServerAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
             //TODO: Add general exception
-
         }
 
         [HttpPost("login")]
