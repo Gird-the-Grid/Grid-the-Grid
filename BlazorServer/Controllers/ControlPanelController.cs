@@ -64,6 +64,10 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
+                if (companyConfiguration.OwnerId != HttpContext.Items["UserId"].ToString())
+                {
+                    throw new ServerException("Resource forbidden");
+                }
                 var response = await _companyHandler.UpdateCompanyConfiguration(companyConfiguration);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
             }

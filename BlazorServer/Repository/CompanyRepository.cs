@@ -1,6 +1,7 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Settings;
-using System;
+using System.Linq;
+using MongoDB.Driver;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Repository
@@ -20,7 +21,13 @@ namespace BlazorServerAPI.Repository
 
         public async Task<CompanyModel> UpdateCompany(string companyId, CompanyModel company)
         {
-            throw new NotImplementedException();
+            var oldCompany = (await _documents.FindAsync<CompanyModel>(document => document.Id == companyId && document.OwnerId == company.OwnerId)).SingleOrDefault();
+            if (oldCompany != null)
+            {
+                await Update(companyId, company);
+                return company;
+            }
+            return oldCompany;
         }
     }
 }
