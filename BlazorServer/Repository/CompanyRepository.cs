@@ -15,7 +15,6 @@ namespace BlazorServerAPI.Repository
         public async Task<CompanyModel> CreateCompany(CompanyModel company)
         {
             company.Id = null;
-            //TODO: add unique key on ownerId
             await _documents.InsertOneAsync(company);
             return company;
         }
