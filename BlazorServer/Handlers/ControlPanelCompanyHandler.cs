@@ -1,10 +1,7 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
-using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers
@@ -19,7 +16,7 @@ namespace BlazorServerAPI.Handlers
         }
         public async Task<IResponse> CreateCompanyConfiguration(CompanyModel company)
         {
-            var newCompanyConfiguration = new CompanyModel(company.CompanyName, company.CompanyIdentificationNumber, company.CompanyName, company.TaxRates);
+            var newCompanyConfiguration = new CompanyModel(company.CompanyName, company.CompanyIdentificationNumber, company.Country, company.TaxRates);
             newCompanyConfiguration.OwnerId = company.OwnerId;
             var result = await _companyRepository.CreateCompany(newCompanyConfiguration);
             return new MessageResponse("Company settings updated");

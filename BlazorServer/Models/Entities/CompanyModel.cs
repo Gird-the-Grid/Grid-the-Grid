@@ -1,8 +1,7 @@
-﻿using System;
+﻿using BlazorServerAPI.Utils.Exceptions;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Models.Entities
 {
@@ -18,18 +17,26 @@ namespace BlazorServerAPI.Models.Entities
         public float TaxRates { get; set; }
         public string OwnerId { get; set; }
 
-        public CompanyModel(string companyName, string cin, string country, float taxRates) : base()
+        public CompanyModel() : base()
+        { }
+
+        public CompanyModel(string companyName, string companyIdentificationNumber, string country, float taxRates) : base()
         {
             CompanyName = companyName;
-            CompanyIdentificationNumber = cin;
+            CompanyIdentificationNumber = companyIdentificationNumber;
             Country = country;
             TaxRates = taxRates;
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            //TODO: add custom validation if needed, otherwise remove
-            return null;
+            //TODO: Required not working for tax rates, to be verrified
+            if (Country.Length != 2)
+            {
+                yield return new ValidationResult(
+                       $"Country has to have 2 letters"
+                );
+            }
         }
     }
 }
