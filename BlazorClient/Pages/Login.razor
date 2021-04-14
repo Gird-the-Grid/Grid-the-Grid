@@ -1,4 +1,6 @@
 @page "/login"
+@using BlazorClient.Model.Responses
+@using Newtonsoft.Json;
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 
@@ -49,6 +51,8 @@
         }
     }
 
+
+
     private async Task Log_in()
     {
         LoginPacket lp = new LoginPacket(loginModel.username, loginModel.password);
@@ -58,11 +62,21 @@
 
         response = await r.Content.ReadAsStringAsync();
 
-        if (response.Contains("true"))
+        IResponse loginResponse = (IResponse) JsonConvert.DeserializeObject(response);
+
+        if (loginResponse.Success)
         {
             sessionStorage.SetItem<bool>("logged", true);
+            LoginResponse successLoginResponse = (LoginResponse)loginResponse;
+            sessionStorage.SetItem<string>("token", successLoginResponse.Token);
+            sessionStorage.SetItem<string>("userId", successLoginResponse.UserId);
         }
-        else sessionStorage.SetItem<bool>("logged", false);
+        else
+        {
+            ErrorResponse errorResponse = (ErrorResponse)loginResponse;
+            sessionStorage.SetItem<bool>("logged", false);
+            sessionStorage.SetItem<string>("loginError", errorResponse.Error);
+        }
 
         await InvokeAsync(() =>
         {
