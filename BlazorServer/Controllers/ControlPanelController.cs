@@ -104,7 +104,7 @@ namespace BlazorServerAPI.Controllers
         }
 
         [HttpPost("grid")]
-        public async Task<IActionResult> CreateGridParameters([FromBody] GridModel grid)
+        public async Task<IActionResult> CreateGridParameters([FromBody] GridTemplate gridTemplate)
         {
             if (!ModelState.IsValid)
             {
@@ -113,8 +113,8 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
-                grid.OwnerId = HttpContext.Items["UserId"].ToString();
-                var response = await _gridHandler.CreateGridParameters(grid);
+                gridTemplate.OwnerId = HttpContext.Items["UserId"].ToString();
+                var response = await _gridHandler.CreateGridParameters(gridTemplate);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
             }
             catch (Exception e)
@@ -128,7 +128,7 @@ namespace BlazorServerAPI.Controllers
         }
 
         [HttpPut("grid")]
-        public async Task<IActionResult> UpdateGridParameters([FromBody] GridModel grid)
+        public async Task<IActionResult> UpdateGridParameters([FromBody] GridTemplate grid)
         {
             if (!ModelState.IsValid)
             {

@@ -21,7 +21,7 @@ namespace BlazorServerAPI.Utils.Factories
             _rand = new Random();
             Debug.Assert(_vertexes > 0 && _edges > 0, "vertexes and edges must be bigger than 0");
             Debug.Assert(_vertexes < 1900000, "too many vertexes");
-            Debug.Assert(_edges <= _vertexes * (_vertexes - 1) / 2, "Too many edges");
+            Debug.Assert(_edges <= _vertexes * (_vertexes - 1) / 4, "Too many edges");
         }
 
         public IBaseEntity Create()
@@ -42,11 +42,19 @@ namespace BlazorServerAPI.Utils.Factories
 
         private void addEdgesToGraph(AdjacencyGraph<string, Edge<string>> graph, Dictionary<Edge<string>, double> edgeCost)
         {
+            var possibleEdges = new List<Edge<string>>();
+            for (var vertex1 = 0; vertex1 < _vertexes - 1; ++vertex1)
+            {
+                for (var vertex2 = vertex1 + 1; vertex2 < _vertexes; ++vertex2)
+                {
+                    possibleEdges.Add(new Edge<string>(vertex1.ToString(), vertex2.ToString()));
+                }
+            }
             foreach (var _ in Range(0, _edges))
             {
-                var vertex_1 = _rand.Next(0, _vertexes - 1);
-                var vertex_2 = _rand.Next(vertex_1, _vertexes);
-                var edge = new Edge<string>(vertex_1.ToString(), vertex_2.ToString());
+                var edgeIndex = _rand.Next(0, possibleEdges.Count);
+                var edge = possibleEdges[edgeIndex];
+                possibleEdges.RemoveAt(edgeIndex);
                 graph.AddEdge(edge);
                 edgeCost.Add(edge, _rand.NextDouble() * 99 + 1);
             }
@@ -56,7 +64,7 @@ namespace BlazorServerAPI.Utils.Factories
         {
             var graph = new AdjacencyGraph<string, Edge<string>>(false);
             addVertexesToGraph(graph);
-            var edgeCost = new Dictionary<Edge<string>, double>(graph.EdgeCount);
+            var edgeCost = new Dictionary<Edge<string>, double>(_edges);
             addEdgesToGraph(graph, edgeCost);
             return (graph, edgeCost);
         }

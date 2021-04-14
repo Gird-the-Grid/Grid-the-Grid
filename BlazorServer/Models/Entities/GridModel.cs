@@ -9,9 +9,9 @@ namespace BlazorServerAPI.Models.Entities
     public class GridModel : BaseEntity//, IValidatableObject
     {
 
-        public AdjacencyGraph<string, Edge<string>> Graph { get; set; }
+        public string Graph { get; set; }
 
-        public Dictionary<Edge<string>, double> EdgeCost { get; set; }
+        public string EdgeCost { get; set; }
 
         public string OwnerId { get; set; }
 
@@ -22,11 +22,11 @@ namespace BlazorServerAPI.Models.Entities
         {
             OwnerId = ownerId;
         }
-
+        //TODO: Add [BsonConstructor] to constructors in all entities
         public GridModel(AdjacencyGraph<string, Edge<string>> graph, Dictionary<Edge<string>, double> edgeCost) : base()
         {
-            Graph = graph;
-            EdgeCost = edgeCost;
+            Graph = JsonConvert.SerializeObject(graph);
+            EdgeCost = JsonConvert.SerializeObject(edgeCost);
         }
 
         public override string ToString()

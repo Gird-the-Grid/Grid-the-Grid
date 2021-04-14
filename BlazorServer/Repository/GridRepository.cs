@@ -2,6 +2,7 @@
 using BlazorServerAPI.Settings;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Bson.Serialization;
 
 namespace BlazorServerAPI.Repository
 {
@@ -21,7 +22,7 @@ namespace BlazorServerAPI.Repository
 
         public async Task<GridModel> UpdateGrid(string gridId, GridModel grid)
         {
-            var oldGrid = (await _documents.FindAsync<GridModel>(document => document.Id == gridId && document.OwnerId == grid.OwnerId)).SingleOrDefault();
+            var oldGrid = (await _documents.FindAsync(document => document.Id == gridId && document.OwnerId == grid.OwnerId)).SingleOrDefault();
             if (oldGrid != null)
             {
                 grid.CreatedAt = oldGrid.CreatedAt;
@@ -33,7 +34,7 @@ namespace BlazorServerAPI.Repository
 
         public async Task<GridModel> GetGrid(string userId)
         {
-            return (await _documents.FindAsync<GridModel>(document => document.OwnerId == userId)).SingleOrDefault();
+            return (await _documents.FindAsync(document => document.OwnerId == userId)).SingleOrDefault();
         }
 
     }
