@@ -15,7 +15,7 @@ namespace BlazorClient.Model.Responses
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this); ;
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

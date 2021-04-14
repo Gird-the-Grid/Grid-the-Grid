@@ -34,10 +34,10 @@ namespace BlazorServerAPI.Models.Entities
         }
 
 
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    //TODO: add custom validation, validate everything (edges with foreign nodes, cicles, ...)
-        //}
+        /*public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+          //TODO: add custom validation, validate everything (edges with foreign nodes, cicles, ...)
+        }*/
     }
 
 }

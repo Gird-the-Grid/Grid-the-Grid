@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace BlazorServerAPI.Utils.Exceptions
 {
     [Serializable]
-    public class ServerException : Exception, ISerializable
+    public class ServerException : Exception
     {
         public ServerException() : base("ServerException : ") { }
         public ServerException(string exceptionMessage) : base($"ServerException : {exceptionMessage}") { }

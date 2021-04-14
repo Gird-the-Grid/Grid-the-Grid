@@ -6,10 +6,11 @@ using System.Linq;
 
 namespace BlazorServerAPI.Controllers
 {
-//    private static readonly string[] Summaries = new[]
-//      {
-//            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-//        };
+    /*private static readonly string[] Summaries = new[]
+      {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+    */
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
