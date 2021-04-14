@@ -2,7 +2,7 @@ using BlazorClient.Shared;
 using System;
 using System.Collections.Generic;
 
-namespace BlazorClient.Model
+namespace BlazorClient
 {
     public class NavMenuService
     {
