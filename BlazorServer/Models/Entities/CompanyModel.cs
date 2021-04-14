@@ -30,7 +30,7 @@ namespace BlazorServerAPI.Models.Entities
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            //TODO: Required not working for tax rates, to be verrified
+            //TODO: [Required] not working for TaxRates field, to be verrified here or see if FluentValidation solves this
             if (Country.Length != 2)
             {
                 yield return new ValidationResult(
