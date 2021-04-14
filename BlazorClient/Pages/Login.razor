@@ -4,6 +4,7 @@
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 @inject NavigationManager NavManager
+@inject NavMenuService navMenuService
 
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
@@ -42,7 +43,6 @@
             NavManager.NavigateTo("/");
         }
     }
-
 
     private string writeFromSession(string message)
     {
@@ -85,6 +85,7 @@
             var successLoginResponse = JsonConvert.DeserializeObject<LoginResponse>(response);
             sessionStorage.SetItem<string>("token", successLoginResponse.Token);
             sessionStorage.SetItem<string>("userId", successLoginResponse.UserId);
+            navMenuService.NotifyChanged();
             NavManager.NavigateTo("/");
         }
         else

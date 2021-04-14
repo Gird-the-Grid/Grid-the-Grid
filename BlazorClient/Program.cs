@@ -15,6 +15,7 @@ namespace BlazorClient
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:8001/") });
+            builder.Services.AddScoped(sp => new NavMenuService());
 
             builder.Services.AddBlazoredSessionStorage(config =>config.JsonSerializerOptions.WriteIndented = true);
 

@@ -53,7 +53,7 @@
             var request = new HttpRequestMessage()
             {
                 Method = new HttpMethod("GET"),
-                RequestUri = new Uri(Nav.Uri + "/control_panel/configuration?userId="+ sessionStorage.GetItem<string>("userId")),
+                RequestUri = new Uri(Nav.Uri + "/control_panel/configuration?userId=" + sessionStorage.GetItem<string>("userId")),
             };
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
             var response = await Http.SendAsync(request);
