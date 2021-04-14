@@ -1,13 +1,11 @@
-﻿using MongoDB.Bson;
-using System;
+﻿using System;
 
-namespace BlazorServerAPI.Models.Entities
+namespace BlazorClient.Model.Entities
 {
     public interface IBaseEntity
     {
         string Id { get; set; }
         DateTime CreatedAt { get; set; }
         DateTime UpdatedAt { get; set; }
-
     }
 }

@@ -2,7 +2,6 @@
 using BlazorServerAPI.Settings;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization;
 
 namespace BlazorServerAPI.Repository
 {

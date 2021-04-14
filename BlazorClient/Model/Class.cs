@@ -27,35 +27,4 @@ namespace BlazorClient.Model
         [CompareProperty("password1", ErrorMessage = "Passwords must match !")]
         public string password2 { get; set; }
     }
-
-    public interface IBaseModel
-    {
-        string Id { get; set; }
-        string CreatedAt { get; set; }
-        string UpdatedAt { get; set; }
-    }
-
-    public class BaseModel : IBaseModel
-    {
-        public string Id { get; set; }
-        public string CreatedAt { get; set; }
-        public string UpdatedAt { get; set; }
-    }
-
-    public class CompanyModel : BaseModel
-    {
-        [Required]
-        public string CompanyName { get; set; }
-
-        [Required]
-        public string CompanyIdentificationNumber { get; set; }
-
-        [Required]
-        public string Country { get; set; } //TODO: add validation max length 2 letters
-
-        [Required] //TODO: add validation 0 < t < 100
-        public float TaxRates { get; set; }
-
-        public string OwnerId { get; set; }
-    }
 }
