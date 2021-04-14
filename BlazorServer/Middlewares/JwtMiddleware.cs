@@ -35,7 +35,7 @@ namespace BlazorServerAPI.Middlewares
             await _next(context);
         }
 
-        private void attachUserToContext(HttpContext context, string token)
+        private static void attachUserToContext(HttpContext context, string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(DotEnv.Read()["SECRET"].PadLeft(32));

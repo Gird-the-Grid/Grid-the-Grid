@@ -2,7 +2,6 @@
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Utils.Factories;
-using System;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers

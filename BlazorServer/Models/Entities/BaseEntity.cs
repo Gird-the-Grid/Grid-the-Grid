@@ -10,8 +10,12 @@ namespace BlazorServerAPI.Models.Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public BsonDateTime CreatedAt { get; set; }
-        public BsonDateTime UpdatedAt { get; set; }
+
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+        public DateTime CreatedAt { get; set; }
+
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+        public DateTime UpdatedAt { get; set; }
 
         public BaseEntity()
         {

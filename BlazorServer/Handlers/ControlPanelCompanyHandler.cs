@@ -1,7 +1,6 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
-using System;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers

@@ -4,19 +4,19 @@
 
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
-    @if (!sessionStorage.GetItem<bool>("logged"))
+    @if (!registered)
     {
         <h2 class="h1-title"> Please, register so we can get started</h2>
     }
     else
     {
         <br />
-        <h2 class="h1-title"> You're already logged in !</h2>
+        <h2 class="h1-title"> Verify your email!</h2>
     }
 </div>
 <br />
 
-@if (!sessionStorage.GetItem<bool>("logged"))
+@if (!registered)
 {
     <div class="flex-container" style="margin: 0 auto; display:flex; justify-content:center; width:50%">
         <EditForm Model="@registerModel" OnValidSubmit="@Send_registration">
@@ -35,9 +35,16 @@
 
 @code {
 
+    protected override void OnInitialized()
+    {
+        registered = false;
+    }
+
     private BlazorClient.Model.RegisterModel registerModel = new BlazorClient.Model.RegisterModel();
 
     private string response;
+
+    private bool registered;
 
     private class RegisterPacket
     {
@@ -62,9 +69,8 @@
 
         if (response.Contains("true"))
         {
-            sessionStorage.SetItem<bool>("logged", true);
+            registered = true;
         }
-        else sessionStorage.SetItem<bool>("logged", false);
 
         await InvokeAsync(() =>
         {

@@ -1,5 +1,4 @@
-﻿using BlazorServerAPI.Utils.Exceptions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

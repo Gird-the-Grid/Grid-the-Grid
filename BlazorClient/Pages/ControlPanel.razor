@@ -2,10 +2,9 @@
 @using System.Net.Http
 @using System.Net.Http.Headers
 @using System.Net.Http.Json
-@using BlazorClient.Model
+@using BlazorClient.Model.Entities
 @using BlazorClient.Model.Responses
 @using Newtonsoft.Json
-
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 @inject NavigationManager Nav
@@ -16,8 +15,8 @@
     {
         <h2 class="h1-title"> TODO: redirect on register or login </h2>
     }
-    <h2 class="h1-title">@companyConfiguration</h2>
-    <writeSession What="companyConfiguration" />
+    <p>@companyConfiguration</p>
+    <p>@gridParameters</p>
 </div>
 <br />
 
@@ -38,22 +37,46 @@
             <button class="custom-button" type="submit">Submit</button>
         </EditForm>
     </div>
+
+    <div class="flex-container" style="margin: 0 auto; display:flex; justify-content:center; width:50%">
+        <EditForm Model="@gridModelTemplate" OnValidSubmit="@PostGridParameters">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <InputNumber id="Number of clients" @bind-Value="gridModelTemplate.Vertexes" class="form-control" placeholder="TODO: validate to be int, 2 < x < 1.9kk" required />
+            <br />
+            <InputNumber id="Grid connections" @bind-Value="gridModelTemplate.Edges" class="form-control" placeholder="TODO: validate to be 0 < x * (x - 1) / 4" required />
+            <br />
+            <button class="custom-button" type="submit">Submit</button>
+        </EditForm>
+    </div>
 }
 
 @code {
     private string companyConfiguration;
 
-    private BlazorClient.Model.CompanyModel companyModel = new BlazorClient.Model.CompanyModel();
+    private string gridParameters;
+
+    private CompanyModel companyModel = new CompanyModel();
+
+    private GridModel gridModel = new GridModel();
+
+    private GridModelTemplate gridModelTemplate = new GridModelTemplate();
 
     protected override async void OnInitialized()
     {
+        initCompanyConfiguration(); //do we need to await this or not?
+        initGridParameters(); //same
+    }
+    
+    private async void initCompanyConfiguration(bool forceGet = false)
+    {
         companyConfiguration = sessionStorage.GetItem<string>("companyConfiguration");
-        if (companyConfiguration == null)
+        if (companyConfiguration == null || forceGet)
         {
             var request = new HttpRequestMessage()
             {
                 Method = new HttpMethod("GET"),
-                RequestUri = new Uri(Nav.Uri + "/control_panel/configuration?userId=" + sessionStorage.GetItem<string>("userId")),
+                RequestUri = new Uri("http://localhost:49429/control_panel" + "/configuration?userId=" + sessionStorage.GetItem<string>("userId")),
             };
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
             var response = await Http.SendAsync(request);
@@ -68,8 +91,43 @@
             var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
             sessionStorage.SetItem<string>("companyConfiguration", mRes.Message);
             companyConfiguration = mRes.Message;
+            await InvokeAsync(() => StateHasChanged());
         }
         companyModel = JsonConvert.DeserializeObject<CompanyModel>(companyConfiguration);
+
+    }
+
+    private async void initGridParameters(bool forceGet = false)
+    {
+        gridParameters = sessionStorage.GetItem<string>("gridParameters");
+        if (gridParameters == null || forceGet)
+        {
+            var request = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri("http://localhost:49429/control_panel" + "/grid?userId=" + sessionStorage.GetItem<string>("userId")),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+            var response = await Http.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
+            var iRes = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
+            if (!iRes.Success)
+            {
+                // ERROR
+                return;
+            }
+            var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
+            sessionStorage.SetItem<string>("gridParameters", mRes.Message);
+            gridParameters = mRes.Message;
+            await InvokeAsync(() => StateHasChanged());
+        }
+        gridModel = JsonConvert.DeserializeObject<GridModel>(gridParameters);
+        gridModelTemplate.Vertexes = 10;
+        gridModelTemplate.Id = gridModel.Id;
+        gridModelTemplate.Edges = 10;
+        gridModelTemplate.OwnerId = gridModel.OwnerId;
+        //TODO: here we would need to enter GridModel.Graph, deserialize this in a AdjacencyGraph<string, Edge<string>> graph and get graph.VertexCount and graph.EdgesCount
     }
 
     private string response;
@@ -80,7 +138,7 @@
         var request = new HttpRequestMessage()
         {
             Method = new HttpMethod(method),
-            RequestUri = new Uri(Nav.Uri + "/control_panel/configuration"),
+            RequestUri = new Uri("http://localhost:49429/control_panel" + "/configuration"),
             Content = JsonContent.Create(companyModel)
         };
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
@@ -89,11 +147,29 @@
 
         var responseBody = await response.Content.ReadAsStringAsync();
 
-        sessionStorage.SetItem<string>("companyConfiguration", responseBody);
+        Console.WriteLine(responseBody);
 
-        await InvokeAsync(() =>
+        initCompanyConfiguration(true);
+    }
+
+    private async Task PostGridParameters()
+    {
+        var method = gridParameters == null ? "POST" : "PUT";
+        var request = new HttpRequestMessage()
         {
-            StateHasChanged();
-        });
+            Method = new HttpMethod(method),
+            RequestUri = new Uri("http://localhost:49429/control_panel" + "/grid"),
+            Content = JsonContent.Create(gridModelTemplate)
+        };
+        Console.WriteLine(JsonConvert.SerializeObject(gridModelTemplate));
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+        var response = await Http.SendAsync(request);
+        var responseStatusCode = response.StatusCode;
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        Console.WriteLine(responseBody);
+
+        initGridParameters(true);
     }
 }
