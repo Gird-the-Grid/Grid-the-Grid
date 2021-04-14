@@ -2,8 +2,13 @@
 @using System.Net.Http
 @using System.Net.Http.Headers
 @using System.Net.Http.Json
+@using BlazorClient.Model
+@using BlazorClient.Model.Responses
+@using Newtonsoft.Json
+
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+@inject NavigationManager Nav
 
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
@@ -36,27 +41,48 @@
 }
 
 @code {
-    string companyConfiguration;
-
-    protected override void OnInitialized()
-    {
-        //TODO: if session storage is empty, GET from /control_panel/configuration
-        companyConfiguration = sessionStorage.GetItem<string>("companyConfiguration");
-    }
+    private string companyConfiguration;
 
     private BlazorClient.Model.CompanyModel companyModel = new BlazorClient.Model.CompanyModel();
+
+    protected override async void OnInitialized()
+    {
+        companyConfiguration = sessionStorage.GetItem<string>("companyConfiguration");
+        if (companyConfiguration == null)
+        {
+            var request = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri(Nav.Uri + "/control_panel/configuration?userId="+ sessionStorage.GetItem<string>("userId")),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+            var response = await Http.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var iRes = (IResponse)JsonConvert.DeserializeObject(responseBody);
+            if (!iRes.Success)
+            {
+                // ERROR
+                return;
+            }
+            var mRes = (MessageResponse)iRes;
+            sessionStorage.SetItem<string>("companyConfiguration", mRes.Message);
+            companyConfiguration = mRes.Message;
+        }
+        companyModel = JsonConvert.DeserializeObject<CompanyModel>(companyConfiguration);
+    }
 
     private string response;
 
     private async Task PostCompanyConfiguration()
     {
+        var method = companyConfiguration == null ? "POST" : "PUT";
         var request = new HttpRequestMessage()
         {
-            Method = new HttpMethod("POST"),
-            RequestUri = new Uri("http://localhost:49429/control_panel/configuration"),
+            Method = new HttpMethod(method),
+            RequestUri = new Uri(Nav.Uri + "/control_panel/configuration"),
             Content = JsonContent.Create(companyModel)
         };
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNzFhNTM5YmMyYWNmZjU5M2UxM2NjMSIsIm5iZiI6MTYxODMxNDUzMSwiZXhwIjoxNjE4OTE5MzMxLCJpYXQiOjE2MTgzMTQ1MzF9.C-t9emi72yazOo5-I9NhDiA1CGAMTp7BCrzCBcFOEuA");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
         var response = await Http.SendAsync(request);
         var responseStatusCode = response.StatusCode;
 
