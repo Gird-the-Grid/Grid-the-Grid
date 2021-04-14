@@ -15,7 +15,6 @@ namespace BlazorServerAPI.Repository
         public async Task<GridModel> CreateGrid(GridModel grid)
         {
             grid.Id = null;
-            //TODO: add unique key on ownerId
             await _documents.InsertOneAsync(grid);
             return grid;
         }

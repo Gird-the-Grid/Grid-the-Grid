@@ -31,7 +31,6 @@ namespace BlazorServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO: use FluentValidation
                 return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()).ToString());
             }
             try
@@ -59,7 +58,6 @@ namespace BlazorServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO: use FluentValidation
                 return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
             }
             try
@@ -108,7 +106,6 @@ namespace BlazorServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO: use FluentValidation
                 return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()).ToString());
             }
             try
@@ -132,7 +129,6 @@ namespace BlazorServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO: use FluentValidation
                 return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
             }
             try
