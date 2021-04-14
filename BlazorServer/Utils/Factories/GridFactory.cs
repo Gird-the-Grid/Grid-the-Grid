@@ -1,4 +1,5 @@
 ﻿using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Utils.Extensions;
 using QuickGraph;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace BlazorServerAPI.Utils.Factories
                 var edge = possibleEdges[edgeIndex];
                 possibleEdges.RemoveAt(edgeIndex);
                 graph.AddEdge(edge);
-                edgeCost.Add(edge, _rand.NextDouble() * 99 + 1);
+                edgeCost.Add(edge, _rand.NextDouble(1, 100));
             }
         }
 
