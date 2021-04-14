@@ -4,9 +4,9 @@ namespace BlazorServerAPI.Models.Responses
 {
     public class LoginResponse : BaseResponse
     {
-        public string Token;
+        public string Token { get; set; }
 
-        public string UserId;
+        public string UserId { get; set; }
 
         public LoginResponse(string token, string userId) : base(true)
         {

@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace BlazorServerAPI.Utils.Exceptions
 {
     [Serializable]
-    public class InvalidPasswordException : Exception
+    public class InvalidPasswordException : Exception, ISerializable
     {
-        public InvalidPasswordException() : base(String.Format("InvalidPasswordException : ")) { }
-        public InvalidPasswordException(String exceptionMessage) : base(String.Format("InvalidPasswordException : {0}", exceptionMessage)) { }
-        public InvalidPasswordException(String exceptionMessage, Exception inner) : base(String.Format("InvalidPasswordException : {0}", exceptionMessage), inner) { }
+        public InvalidPasswordException() : base("InvalidEmailException : ") { }
+        public InvalidPasswordException(string exceptionMessage) : base($"InvalidEmailException : {exceptionMessage}") { }
+        public InvalidPasswordException(string exceptionMessage, Exception inner) : base($"InvalidEmailException : {exceptionMessage}", inner) { }
 
     }
 

@@ -3,6 +3,7 @@
 @using Newtonsoft.Json;
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+@inject NavigationManager NavManager
 
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
@@ -13,11 +14,6 @@
             <h2 class="h1-title"> @writeFromSession("loginError")</h2>
         }
         <h2 class="h1-title"> Already a client? Login</h2>
-    }
-    else
-    {
-        <br />
-        <h2 class="h1-title"> You're already logged in !</h2>
     }
 </div>
 <br />
@@ -38,6 +34,16 @@
 }
 
 @code {
+
+    protected override void OnInitialized()
+    {
+        if (sessionStorage.GetItem<bool>("logged"))
+        {
+            NavManager.NavigateTo("/");
+        }
+    }
+
+
     private string writeFromSession(string message)
     {
         var value = sessionStorage.GetItem<string>(message);
@@ -79,9 +85,12 @@
             var successLoginResponse = JsonConvert.DeserializeObject<LoginResponse>(response);
             sessionStorage.SetItem<string>("token", successLoginResponse.Token);
             sessionStorage.SetItem<string>("userId", successLoginResponse.UserId);
+            NavManager.NavigateTo("/");
         }
         else
         {
+            //TODO: increment login error count, if too many block user or sth
+            //TODO: add access error count on back-end and if too many password failed send mail with penetration report to user
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response);
             sessionStorage.SetItem<bool>("logged", false);
             sessionStorage.SetItem<string>("loginError", errorResponse.Error);
@@ -91,5 +100,6 @@
         {
             StateHasChanged();
         });
+        //TODO: maybe  add redirect page when nothing else to do
     }
 }

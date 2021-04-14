@@ -13,13 +13,14 @@ namespace BlazorServerAPI.Handlers
 
         public ControlPanelGridHandler(GridRepository gridRepository)
         {
+            //TODO: This and ControlPanelCompanyHandler are similar, to verify if possible to merge
             _gridRepository = gridRepository;
         }
         public async Task<IResponse> CreateGridParameters(GridTemplate gridTemplate)
         {
             var newGrid = (GridModel)(new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges)).Create(); //TODO: see if there's a way to return a GridModel and not convert
             newGrid.OwnerId = gridTemplate.OwnerId;
-            var result = await _gridRepository.CreateGrid(newGrid);
+            _ = await _gridRepository.CreateGrid(newGrid);
             return new MessageResponse("Grid parameters updated");
         }
 

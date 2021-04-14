@@ -2,9 +2,9 @@
 {
     public abstract class BaseResponse : IResponse
     {
-        public bool Success;
+        public bool Success { get; set; }
 
-        public BaseResponse(bool success)
+        protected BaseResponse(bool success)
         {
             Success = success;
         }

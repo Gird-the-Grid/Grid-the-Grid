@@ -21,7 +21,7 @@ namespace BlazorServerAPI.Controllers
         public async Task<IActionResult> DenyAccess ()
         {
             var userItems = HttpContext.Items["UserId"];
-            var userServiceDetails = await _userService.Get();
+            _ = await _userService.Get();
             return Ok(userItems);
         }
 

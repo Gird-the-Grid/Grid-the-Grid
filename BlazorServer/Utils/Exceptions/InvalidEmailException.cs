@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace BlazorServerAPI.Utils.Exceptions
 {
     [Serializable]
-    public class InvalidEmailException : Exception
+    public class InvalidEmailException : Exception, ISerializable
     {
-        public InvalidEmailException() :  base(String.Format("InvalidEmailException : ")) { }
-        public InvalidEmailException(String exceptionMessage) : base(String.Format("InvalidEmailException : {0}", exceptionMessage)) { }
-        public InvalidEmailException(String exceptionMessage, Exception inner) : base(String.Format("InvalidEmailException : {0}", exceptionMessage), inner) { }
+        public InvalidEmailException() :  base("InvalidEmailException : ") { }
+        public InvalidEmailException(string exceptionMessage) : base($"InvalidEmailException : {exceptionMessage}") { }
+        public InvalidEmailException(string exceptionMessage, Exception inner) : base($"InvalidEmailException : {exceptionMessage}", inner) { }
     }
 }

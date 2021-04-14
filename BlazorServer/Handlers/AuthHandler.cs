@@ -68,7 +68,7 @@ namespace BlazorServerAPI.Handlers
             return new MessageResponse("User confirmed.");
         }
 
-        private string generateJwtToken(User user)
+        private static string generateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(DotEnv.Read()["SECRET"].PadLeft(32));

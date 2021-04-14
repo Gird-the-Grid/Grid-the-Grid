@@ -4,10 +4,10 @@ namespace BlazorServerAPI.Models.Responses
 {
     public class ErrorResponse : BaseResponse
     {
-        public string Error;
+        public string Error { get; set; }
 
         //for debug purposes
-        public string ErrorMessage;
+        public string ErrorMessage { get; set; }
 
         public ErrorResponse(string error) : base(false)
         {

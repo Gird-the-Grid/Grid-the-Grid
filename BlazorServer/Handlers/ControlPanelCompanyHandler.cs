@@ -18,7 +18,7 @@ namespace BlazorServerAPI.Handlers
         {
             var newCompanyConfiguration = new CompanyModel(company.CompanyName, company.CompanyIdentificationNumber, company.Country, company.TaxRates);
             newCompanyConfiguration.OwnerId = company.OwnerId; //TODO add a new constructor with owner id
-            var result = await _companyRepository.CreateCompany(newCompanyConfiguration);
+            _ = await _companyRepository.CreateCompany(newCompanyConfiguration);
             return new MessageResponse("Company settings updated");
         }
         

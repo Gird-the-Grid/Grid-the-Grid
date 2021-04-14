@@ -26,15 +26,11 @@ namespace BlazorServerAPI.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            var dbClient = new MongoClient("mongodb+srv://standard_user:standard_password$$$$$$$@cluster0.vdvzo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-            var dbList = dbClient.ListDatabases().ToList();
-
             var randomGrades = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
-                TemperatureC = randomGrades.Next(-20, 55),
-                Summary = dbList[randomGrades.Next(dbList.Count)].ToString()
+                TemperatureC = randomGrades.Next(-20, 55)
             })
             .ToArray();
         }

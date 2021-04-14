@@ -52,8 +52,7 @@ namespace BlazorServerAPI.Models.Entities
                 );
             }
             
-            
-            if (Admin == true)
+            if (Admin)
             {
                 yield return new ValidationResult(
                     $"Illegal argument \"Admin\"."
