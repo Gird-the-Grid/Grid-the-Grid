@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace BlazorServerAPI.Utils.Exceptions
 {
     [Serializable]
-    public class InvalidPasswordException : Exception, ISerializable
+    public class InvalidPasswordException : Exception
     {
         public InvalidPasswordException() : base("InvalidEmailException : ") { }
         public InvalidPasswordException(string exceptionMessage) : base($"InvalidEmailException : {exceptionMessage}") { }

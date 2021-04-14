@@ -30,7 +30,7 @@ namespace IntegrationTests
             var request = await _client.GetAsync("/WeatherForecast");
             var okResult = request.StatusCode;
             Console.Write(okResult);
-            Assert.Equal((int)StatusCodes.Status200OK, (int)request.StatusCode);
+            Assert.True(StatusCodes.Status200OK.Equals(request.StatusCode));
 
         }
 
@@ -40,7 +40,8 @@ namespace IntegrationTests
         {
             
             var request = await _client.PostAsJsonAsync("/auth/login", _existentUser);
-            Assert.NotEqual((int)StatusCodes.Status200OK, (int)request.StatusCode);
+            Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
+            
 
         }
 
@@ -52,8 +53,7 @@ namespace IntegrationTests
             var request = await _client.PostAsJsonAsync("/auth/login", _newUser);
             var response = await request.Content.ReadAsStringAsync();
             Console.Write(response.ToString());
-            Assert.NotEqual((int)StatusCodes.Status200OK, (int)request.StatusCode);
-
+            Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
         }
 
         //PASS
@@ -62,7 +62,7 @@ namespace IntegrationTests
         {
 
             var request = await _client.PostAsJsonAsync("/auth/register", _existentUser);
-            Assert.NotEqual((int)StatusCodes.Status400BadRequest, (int)request.StatusCode);
+            Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
 
         }
 
