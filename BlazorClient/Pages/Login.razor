@@ -85,7 +85,12 @@
             var successLoginResponse = JsonConvert.DeserializeObject<LoginResponse>(response);
             sessionStorage.SetItem<string>("token", successLoginResponse.Token);
             sessionStorage.SetItem<string>("userId", successLoginResponse.UserId);
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
             NavManager.NavigateTo("/");
+
         }
         else
         {

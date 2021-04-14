@@ -6,7 +6,7 @@ namespace BlazorServerAPI.Models.Responses
 {
     public class MessageResponse : BaseResponse
     {
-        public string Message;
+        public string Message { get; set; }
 
         public MessageResponse(string message) : base(true) => Message = message;
 
