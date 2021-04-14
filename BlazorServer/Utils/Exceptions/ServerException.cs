@@ -9,6 +9,6 @@ namespace BlazorServerAPI.Utils.Exceptions
         public ServerException() : base("ServerException : ") { }
         public ServerException(string exceptionMessage) : base($"ServerException : {exceptionMessage}") { }
         public ServerException(string exceptionMessage, Exception inner) : base($"ServerException : {exceptionMessage}", inner) { }
-
+        protected ServerException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo,streamingContext){ }
     }
 }

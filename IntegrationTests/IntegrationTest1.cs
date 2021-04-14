@@ -18,10 +18,10 @@ namespace IntegrationTests
         static readonly WebApplicationFactory<BlazorServerAPI.Startup> _factory = new WebApplicationFactory<BlazorServerAPI.Startup>();
         static readonly HttpClient _client = _factory.CreateClient();
 
-        private readonly UserRepository _userService;
+    
         private readonly User _existentUser = new User();
         private readonly User _newUser = new User("first@mail.com", "testPassword1");
-        public  IMailService mailService;
+        public IMailService mailService = new MailService();
 
         //PASS
         [Fact]
@@ -34,14 +34,6 @@ namespace IntegrationTests
 
         }
 
-        //PASS
-        [Fact]
-        public async Task AuthController_Return_Type()
-        {
-            var authController = new AuthController(_userService,mailService);
-            ObjectResult request = (ObjectResult)await authController.Register(_newUser);
-            Assert.Equal(typeof(ObjectResult), request.GetType());
-        }
         //PASS
         [Fact]
         public async Task Login_Success_StatusCode()

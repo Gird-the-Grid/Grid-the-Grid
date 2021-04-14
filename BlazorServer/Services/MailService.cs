@@ -14,6 +14,8 @@ namespace BlazorServerAPI.Services
     {
         private readonly MailSettings _mailSettings;
 
+        public MailService(){}
+
         public MailService(IOptions<MailSettings> mailSettings)
         {
             _mailSettings = mailSettings.Value;

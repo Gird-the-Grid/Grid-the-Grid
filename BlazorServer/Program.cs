@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace BlazorServerAPI
 {
-    public class Program
+    static class Program
     {
         public static void Main(string[] args)
         {

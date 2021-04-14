@@ -28,7 +28,9 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> Register(User user)
         {
+            #nullable enable
             var hashedPassword = new PasswordHasher<object?>().HashPassword(null, user.Password);
+            #nullable disable
             if (hashedPassword == null)
             {
                 throw new InvalidPasswordException("PasswordHasher failed, not enough entropy");
@@ -46,7 +48,9 @@ namespace BlazorServerAPI.Handlers
             {
                 return new ErrorResponse(error: "Invalid credentials");
             }
+            #nullable enable
             var passwordVerificationResult = new PasswordHasher<object?>().VerifyHashedPassword(null, result.Password, user.Password);
+            #nullable disable
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
                 return new ErrorResponse(error: "Invalid credentials");

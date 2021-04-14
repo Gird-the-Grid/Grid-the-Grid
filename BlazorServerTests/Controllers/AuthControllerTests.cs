@@ -13,12 +13,13 @@ namespace BlazorServer.Controllers.Tests
     {
         private readonly UserRepository _userService;
         private readonly User user = new User();
-        private readonly IMailService _mailService;
+        public IMailService _mailService = new MailService();
 
         [TestMethod()]
         public async Task RegisterTestAsync()
         {
-            var authController = new AuthController(_userService,_mailService);
+            
+            var authController = new AuthController(_userService, _mailService);
             var request = await authController.Register(user);
             Assert.AreEqual(typeof(ObjectResult), request.GetType());
         }
