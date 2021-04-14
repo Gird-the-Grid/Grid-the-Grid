@@ -58,13 +58,14 @@
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
             var response = await Http.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var iRes = (IResponse)JsonConvert.DeserializeObject(responseBody);
+            Console.WriteLine(responseBody);
+            var iRes = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
             if (!iRes.Success)
             {
                 // ERROR
                 return;
             }
-            var mRes = (MessageResponse)iRes;
+            var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
             sessionStorage.SetItem<string>("companyConfiguration", mRes.Message);
             companyConfiguration = mRes.Message;
         }
