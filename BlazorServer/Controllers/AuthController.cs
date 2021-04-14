@@ -32,8 +32,8 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
-                var x = await _handler.Register(user);
-                return StatusCode(StatusCodes.Status201Created, x.ToString());
+                var responseOnRegister = await _handler.Register(user);
+                return StatusCode(StatusCodes.Status201Created, responseOnRegister.ToString());
             }
             catch (MongoDB.Driver.MongoWriteException)
             {
@@ -55,8 +55,8 @@ namespace BlazorServerAPI.Controllers
             }
             try
             {
-                var x = await _handler.Login(user);
-                return StatusCode(StatusCodes.Status202Accepted, x.ToString());
+                var responseOnLogin = await _handler.Login(user);
+                return StatusCode(StatusCodes.Status202Accepted, responseOnLogin.ToString());
             }
             catch (ServerException e)
             {
@@ -69,8 +69,8 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                var response = await _handler.Confirm(userId);
-                return StatusCode(StatusCodes.Status202Accepted, response.ToString());
+                var responseOnConfirm = await _handler.Confirm(userId);
+                return StatusCode(StatusCodes.Status202Accepted, responseOnConfirm.ToString());
             }
             catch (ServerException e)
             {

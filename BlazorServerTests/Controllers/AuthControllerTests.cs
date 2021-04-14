@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Controllers;
+using BlazorServerAPI.Services;
 
 namespace BlazorServer.Controllers.Tests
 {
@@ -12,14 +13,14 @@ namespace BlazorServer.Controllers.Tests
     {
         private readonly UserRepository _userService;
         private readonly User user = new User();
-
+        private readonly IMailService _mailService;
 
         [TestMethod()]
         public async Task RegisterTestAsync()
         {
             //var result = await new AuthController(_userService).Register(user);
             //Assert.AreEqual(typeof(ObjectResult), result.GetType
-            var authController = new AuthController(_userService);
+            var authController = new AuthController(_userService,_mailService);
             var user = new User("_test", "_test");
             var request = await authController.Register(user);
             Assert.AreEqual(typeof(ObjectResult), request.GetType());
@@ -28,7 +29,7 @@ namespace BlazorServer.Controllers.Tests
         [TestMethod()]
         public async Task LoginTestAsync()
         {
-            var authController = new AuthController(_userService);
+            var authController = new AuthController(_userService, _mailService);
             var user = new User("_test", "_test");
             var request = await authController.Login(user);
             //Console.Write(request);

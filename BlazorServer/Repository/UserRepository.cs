@@ -14,8 +14,8 @@ namespace BlazorServerAPI.Repository
 
         public async Task<User> FindUserByEmail(string email)
         {
-            var x = await _documents.FindAsync<User>(user => user.Email == email && user.Activated);
-            return x.SingleOrDefault();
+            var userFindByEmail = await _documents.FindAsync<User>(user => user.Email == email && user.Activated);
+            return userFindByEmail.SingleOrDefault();
         }
 
         public async Task<User> CreateUser(User user)
