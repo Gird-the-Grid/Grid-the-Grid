@@ -13,14 +13,11 @@ namespace BlazorClient.Model.Responses
         //for debug purposes
         public string ErrorMessage { get; set; }
 
-        public ErrorResponse(string error) : base(false)
-        {
-            Error = error;
-            ErrorMessage = "";
-        }
-
+        [JsonConstructor]
         public ErrorResponse(string error, string errorMessage) : base(false)
         {
+            //TODO: Check how Newtonsoft.Json works, because it might give errors if more constructors with [JsonConstructor] exist. 
+            //TODO: Do add [JsonConstructor] attribute to all json serialized classes
             Error = error;
             ErrorMessage = errorMessage;
         }

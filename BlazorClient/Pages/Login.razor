@@ -8,6 +8,10 @@
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
     @if (!sessionStorage.GetItem<bool>("logged"))
     {
+        @if (sessionStorage.GetItem<string>("loginError") != null)
+        {
+            <h2 class="h1-title"> @writeFromSession("loginError")</h2>
+        }
         <h2 class="h1-title"> Already a client? Login</h2>
     }
     else
@@ -34,6 +38,11 @@
 }
 
 @code {
+    private string writeFromSession(string message)
+    {
+        var value = sessionStorage.GetItem<string>(message);
+        return value;
+    }
 
     private BlazorClient.Model.LoginModel loginModel = new BlazorClient.Model.LoginModel();
 
