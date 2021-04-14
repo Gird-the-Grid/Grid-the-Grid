@@ -21,14 +21,13 @@ namespace IntegrationTests
         private readonly UserRepository _userService;
         private readonly User _existentUser = new User();
         private readonly User _newUser = new User("first@mail.com", "testPassword1");
-        private readonly IMailService mailService;
+        public  IMailService mailService;
 
         //PASS
         [Fact]
         public async Task Get_Should_Retrieve_Forecast()
         {
             var request = await _client.GetAsync("/WeatherForecast");
-            //var forecast = await response.Content.ReadAsStringAsync();
             var okResult = request.StatusCode;
             Console.Write(okResult);
             Assert.Equal((int)StatusCodes.Status200OK, (int)request.StatusCode);
@@ -49,7 +48,6 @@ namespace IntegrationTests
         {
             
             var request = await _client.PostAsJsonAsync("/auth/login", _existentUser);
-            //var forecast = await response.Content.ReadAsStringAsync();
             Assert.NotEqual((int)StatusCodes.Status200OK, (int)request.StatusCode);
 
         }
@@ -63,10 +61,6 @@ namespace IntegrationTests
             var response = await request.Content.ReadAsStringAsync();
             Console.Write(response.ToString());
             Assert.NotEqual((int)StatusCodes.Status200OK, (int)request.StatusCode);
-            //var authController = new AuthController(_userService);
-            //var user = new User("_test","_test");
-            //var request = await authController.Register(user);
-            //Assert.Equal(null, request);
 
         }
 
@@ -76,21 +70,9 @@ namespace IntegrationTests
         {
 
             var request = await _client.PostAsJsonAsync("/auth/register", _existentUser);
-            //var forecast = await response.Content.ReadAsStringAsync();
             Assert.NotEqual((int)StatusCodes.Status400BadRequest, (int)request.StatusCode);
 
         }
-
-        ////PASS
-        //[Fact]
-        //public async Task Register_Succes_StatusCode()
-        //{
-
-        //    var request = await _client.PostAsJsonAsync("/auth/register", _newUser });
-        //    //var forecast = await response.Content.ReadAsStringAsync();
-        //    Assert.Equal((int)StatusCodes.Status200OK, (int)request.StatusCode);
-
-        //}
 
 
     }

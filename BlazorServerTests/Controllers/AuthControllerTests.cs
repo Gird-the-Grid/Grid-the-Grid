@@ -18,10 +18,7 @@ namespace BlazorServer.Controllers.Tests
         [TestMethod()]
         public async Task RegisterTestAsync()
         {
-            //var result = await new AuthController(_userService).Register(user);
-            //Assert.AreEqual(typeof(ObjectResult), result.GetType
             var authController = new AuthController(_userService,_mailService);
-            var user = new User("_test", "_test");
             var request = await authController.Register(user);
             Assert.AreEqual(typeof(ObjectResult), request.GetType());
         }
@@ -30,9 +27,7 @@ namespace BlazorServer.Controllers.Tests
         public async Task LoginTestAsync()
         {
             var authController = new AuthController(_userService, _mailService);
-            var user = new User("_test", "_test");
             var request = await authController.Login(user);
-            //Console.Write(request);
             Assert.AreEqual(typeof(ObjectResult), request.GetType());
         }
     }
