@@ -5,7 +5,6 @@
 @using BlazorClient.Model
 @using BlazorClient.Model.Responses
 @using Newtonsoft.Json
-
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 @inject NavigationManager Nav
@@ -53,7 +52,7 @@
             var request = new HttpRequestMessage()
             {
                 Method = new HttpMethod("GET"),
-                RequestUri = new Uri(Nav.Uri + "/control_panel/configuration?userId="+ sessionStorage.GetItem<string>("userId")),
+                RequestUri = new Uri("http://localhost:49429/control_panel" + "/configuration?userId=" + sessionStorage.GetItem<string>("userId")),
             };
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
             var response = await Http.SendAsync(request);
@@ -80,7 +79,7 @@
         var request = new HttpRequestMessage()
         {
             Method = new HttpMethod(method),
-            RequestUri = new Uri(Nav.Uri + "/control_panel/configuration"),
+            RequestUri = new Uri("http://localhost:49429/control_panel" + "/configuration"),
             Content = JsonContent.Create(companyModel)
         };
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
