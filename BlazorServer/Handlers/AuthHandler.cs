@@ -53,7 +53,7 @@ namespace BlazorServerAPI.Handlers
             }
             if (passwordVerificationResult == PasswordVerificationResult.Success)
             {
-                return new LoginResponse(token: generateJwtToken(result));
+                return new LoginResponse(token: generateJwtToken(result), userId: result.Id);
             }
             throw new InvalidPasswordException(passwordVerificationResult.ToString());
         }

@@ -6,9 +6,12 @@ namespace BlazorServerAPI.Models.Responses
     {
         public string Token;
 
-        public LoginResponse(string token) : base(true)
+        public string UserId;
+
+        public LoginResponse(string token, string userId) : base(true)
         {
             Token = token;
+            UserId = userId;
         }
 
         public override string ToString()
