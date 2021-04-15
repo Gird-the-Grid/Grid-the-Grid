@@ -42,8 +42,10 @@
         <EditForm Model="@gridModelTemplate" OnValidSubmit="@PostGridParameters">
             <DataAnnotationsValidator />
             <ValidationSummary />
-            <InputNumber id="Number of clients" @bind-Value="gridModelTemplate.Vertexes" class="form-control" placeholder="TODO: validate to be int, 2 < x < 1.9kk" required />
+            <h3>Number of grid vertexes:</h3>
+            <InputNumber id="Number of clients" @bind-Value="gridModelTemplate.Vertexes" class="form-control" placeholder="" required />
             <br />
+            <h3>Number of grid edges:</h3>
             <InputNumber id="Grid connections" @bind-Value="gridModelTemplate.Edges" class="form-control" placeholder="TODO: validate to be 0 < x * (x - 1) / 4" required />
             <br />
             <button class="custom-button" type="submit">Submit</button>
