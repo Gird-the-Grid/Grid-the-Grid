@@ -66,11 +66,11 @@
 
     protected override async void OnInitialized()
     {
-        initCompanyConfiguration(); //do we need to await this or not?
-        initGridParameters(); //same
+        await initCompanyConfiguration(); //do we need to await this or not?
+        await initGridParameters(); //same
     }
-    
-    private async void initCompanyConfiguration(bool forceGet = false)
+
+    private async Task initCompanyConfiguration(bool forceGet = false)
     {
         companyConfiguration = sessionStorage.GetItem<string>("companyConfiguration");
         if (companyConfiguration == null || forceGet)
@@ -93,13 +93,12 @@
             var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
             sessionStorage.SetItem<string>("companyConfiguration", mRes.Message);
             companyConfiguration = mRes.Message;
-            await InvokeAsync(() => StateHasChanged());
         }
         companyModel = JsonConvert.DeserializeObject<CompanyModel>(companyConfiguration);
-
+        await InvokeAsync(() => StateHasChanged());
     }
 
-    private async void initGridParameters(bool forceGet = false)
+    private async Task initGridParameters(bool forceGet = false)
     {
         gridParameters = sessionStorage.GetItem<string>("gridParameters");
         if (gridParameters == null || forceGet)
@@ -151,7 +150,7 @@
 
         Console.WriteLine(responseBody);
 
-        initCompanyConfiguration(true);
+        await initCompanyConfiguration(true);
     }
 
     private async Task PostGridParameters()
@@ -172,6 +171,6 @@
 
         Console.WriteLine(responseBody);
 
-        initGridParameters(true);
+        await initGridParameters(true);
     }
 }

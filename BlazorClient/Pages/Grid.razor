@@ -1,0 +1,129 @@
+@page "/grid"
+
+@using System.Net.Http
+@using System.Net.Http.Headers
+@using BlazorClient.Model.Responses
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+
+@inject HttpClient Http
+@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+@inject NavigationManager NavManager
+
+@if (sessionStorage.GetItem<bool>("logged"))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-dark table-hover">
+                    <tr>
+                        <td scope="col">Connection</td>
+                        <td scope="col">Power</td>
+                        <td scope="col">MaxPower</td>
+                    </tr>
+                    @if (gridWeights != null)
+                    {
+                        @foreach (var conn in gridWeights)
+                        {
+                            <tr>
+                                <td>@conn.Key</td>
+                                <td>@conn.Value</td>
+                                <td>@((string)edgeCost[conn.Key])</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+            <div class="col">
+                <div class="bd-example">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="bd-example">
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+    private Dictionary<string, string> gridWeights;
+    private JObject gridParameters;
+    private JObject edgeCost;
+
+    protected async override void OnInitialized()
+    {
+        @if (!sessionStorage.GetItem<bool>("logged"))
+        {
+            NavManager.NavigateTo("/login");
+        }
+
+        await RefreshData();
+#pragma warning disable CS4014
+        SetInterval(async () => await RefreshData(), TimeSpan.FromSeconds(3));
+#pragma warning restore CS4014
+    }
+
+    private async Task RefreshData()
+    {
+        {
+            var request = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri("http://localhost:49429/grid_manager/current_weights?userId=" + sessionStorage.GetItem<string>("userId")),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+            var response = await Http.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
+            var iRes = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
+            if (!iRes.Success)
+            {
+                // ERROR
+                return;
+            }
+            var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
+            gridWeights = JsonConvert.DeserializeObject<Dictionary<string, string>>(mRes.Message);
+        }
+
+        {
+            var request = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri("http://localhost:49429/control_panel" + "/grid?userId=" + sessionStorage.GetItem<string>("userId")),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+            var response = await Http.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
+            var iRes = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
+            if (!iRes.Success)
+            {
+                // ERROR
+                return;
+            }
+            var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
+            sessionStorage.SetItem<string>("gridParameters", mRes.Message);
+            Console.WriteLine(mRes.Message);
+            gridParameters = (JObject)JsonConvert.DeserializeObject(mRes.Message);
+            edgeCost = (JObject)JsonConvert.DeserializeObject((string)gridParameters["EdgeCost"]);
+        }
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    public static async Task SetInterval(Action action, TimeSpan timeout)
+    {
+        await Task.Delay(timeout).ConfigureAwait(false);
+
+        action();
+
+#pragma warning disable CS4014
+        SetInterval(action, timeout);
+#pragma warning restore CS4014
+    }
+}
