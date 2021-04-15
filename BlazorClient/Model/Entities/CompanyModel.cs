@@ -10,10 +10,12 @@ namespace BlazorClient.Model.Entities
         [Required]
         public string CompanyIdentificationNumber { get; set; }
 
+        [StringLength(2, MinimumLength = 1)]
         [Required]
-        public string Country { get; set; } //TODO: add validation max length 2 letters
+        public string Country { get; set; } 
 
-        [Required] //TODO: add validation 0 < t < 100
+        [Range(1, 100)]
+        [Required]
         public float TaxRates { get; set; }
 
         public string OwnerId { get; set; }
