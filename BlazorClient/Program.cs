@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlazorClient
 {
+    //TODO: nu cred ca e ok totusi sa intram in chestiile standard Blazor sa facem static doar ca zice SQ
     public static class Program
     {
         public static async Task Main(string[] args)

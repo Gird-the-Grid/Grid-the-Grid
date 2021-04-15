@@ -5,7 +5,7 @@ using QuickGraph;
 namespace BlazorServerAPI.Models.Entities
 {
     //TODO: add atributes needed
-    public class GridModel : BaseEntity//, IValidatableObject
+    public class GridModel : BaseEntity
     {
 
         public string Graph { get; set; }
@@ -33,11 +33,6 @@ namespace BlazorServerAPI.Models.Entities
             return JsonConvert.SerializeObject(this);
         }
 
-
-        /*public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-          //TODO: add custom validation, validate everything (edges with foreign nodes, cicles, ...)
-        }*/
     }
 
 }

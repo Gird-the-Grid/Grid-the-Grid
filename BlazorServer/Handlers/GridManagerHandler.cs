@@ -29,6 +29,8 @@ namespace BlazorServerAPI.Handlers
                 return new ErrorResponse(error: "grid has no configuration");
             }
             var edgeCost = JsonConvert.DeserializeObject<Dictionary<string, double>>(grid.EdgeCost);
+            //TODO: here we sould actually have Dictionary<Edge<string>, double> but json converter cannot convert "1->3" to Edge<string> which should be new Edge<string>("1", "3")
+            // either do it manually or Create a TypeConverter to convert from the string to the key type object.
             var currentEdgeCost = new Dictionary<string, double>();
             foreach(var edge in edgeCost.Keys)
             {

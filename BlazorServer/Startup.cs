@@ -13,6 +13,7 @@ using BlazorServerAPI.Services;
 
 namespace BlazorServerAPI
 {
+    
     public class Startup
     {
         public Startup(IConfiguration configuration)
