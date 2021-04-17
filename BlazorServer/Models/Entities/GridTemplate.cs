@@ -22,6 +22,5 @@ namespace BlazorServerAPI.Models.Entities
         public int Vertexes { get; set; }
         [Required]
         public int Edges { get; set; }
-        public string OwnerId { get; set; }
     }
 }

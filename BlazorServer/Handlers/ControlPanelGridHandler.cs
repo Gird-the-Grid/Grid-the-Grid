@@ -19,7 +19,7 @@ namespace BlazorServerAPI.Handlers
         {
             var newGrid = (GridModel)(new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges)).Create(); //TODO: see if there's a way to return a GridModel and not convert
             newGrid.OwnerId = gridTemplate.OwnerId;
-            _ = await _gridRepository.CreateGrid(newGrid);
+            _ = await _gridRepository.CreateObject(newGrid);
             return new MessageResponse("Grid parameters updated");
         }
 
@@ -28,7 +28,7 @@ namespace BlazorServerAPI.Handlers
             var newGrid = (GridModel)(new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges)).Create();
             newGrid.Id = gridTemplate.Id;
             newGrid.OwnerId = gridTemplate.OwnerId;
-            var updatedGrid = await _gridRepository.UpdateGrid(gridTemplate.Id, newGrid);
+            var updatedGrid = await _gridRepository.UpdateObject(gridTemplate.Id, newGrid);
             if (updatedGrid == null)
             {
                 return new ErrorResponse(error: "Invalid grid id or illegal grid modification");
@@ -38,7 +38,7 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> GetGridParameters(string gridId)
         {
-            var gridParameters = await _gridRepository.GetGrid(gridId);
+            var gridParameters = await _gridRepository.GetObject(gridId);
             if (gridParameters == null)
             {
                 return new ErrorResponse(error: "grid has no configuration");

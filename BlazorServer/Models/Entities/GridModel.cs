@@ -11,9 +11,7 @@ namespace BlazorServerAPI.Models.Entities
         public string Graph { get; set; }
 
         public string EdgeCost { get; set; }
-
-        public string OwnerId { get; set; }
-
+        
         public GridModel() : base()
         { }
 

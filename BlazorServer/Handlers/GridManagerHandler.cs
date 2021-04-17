@@ -23,7 +23,7 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> GetCurrentWeights(string userId)
         {
-            var grid = await _gridRepository.GetGrid(userId);
+            var grid = await _gridRepository.GetObject(userId);
             if (grid == null)
             {
                 return new ErrorResponse(error: "grid has no configuration");

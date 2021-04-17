@@ -10,10 +10,9 @@ using BlazorServerAPI.Models.Entities;
 
 namespace BlazorServerAPI.Repository
 {
-    public class BaseRepository<T> where T : IBaseEntity
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity 
     {
-
-        protected readonly IMongoCollection<T> _documents;
+        public IMongoCollection<T> _documents { get;}
 
         public BaseRepository(IMongoDbSettings settings, string collection)
         {
@@ -24,7 +23,7 @@ namespace BlazorServerAPI.Repository
 
         public async Task<List<T>> Get()
         {
-            var entityDocs = await _documents.FindAsync<T>(document => true);
+            var entityDocs = await _documents.FindAsync(document => true);
             return entityDocs.ToList();
         }
 
@@ -46,6 +45,30 @@ namespace BlazorServerAPI.Repository
         {
             var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
             await _documents.DeleteOneAsync(filter);
+        }
+
+        public async Task<T> CreateObject(T obj)
+        {
+            obj.Id = null;
+            await _documents.InsertOneAsync(obj);
+            return obj;
+        }
+
+        public async Task<T> UpdateObject(string objectId, T obj)
+        {
+            var oldobj = (await _documents.FindAsync(document => document.Id == objectId && document.OwnerId == obj.OwnerId)).SingleOrDefault();
+            if (oldobj != null)
+            {
+                obj.CreatedAt = oldobj.CreatedAt;
+                await Update(objectId, obj);
+                return obj;
+            }
+            return oldobj;
+        }
+
+        public async Task<T> GetObject(string userId)
+        {
+            return (await _documents.FindAsync(document => document.OwnerId == userId)).SingleOrDefault();
         }
     }
 }
