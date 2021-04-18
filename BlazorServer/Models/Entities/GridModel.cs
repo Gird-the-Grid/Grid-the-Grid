@@ -5,7 +5,7 @@ using QuickGraph;
 namespace BlazorServerAPI.Models.Entities
 {
     //TODO: add atributes needed
-    public class GridModel : BaseEntity
+    public class GridModel : OwnedEntity
     {
 
         public string Graph { get; set; }

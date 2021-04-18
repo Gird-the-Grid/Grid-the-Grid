@@ -11,8 +11,6 @@ namespace BlazorServerAPI.Models.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string OwnerId { get; set; }
-
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime CreatedAt { get; set; }
 

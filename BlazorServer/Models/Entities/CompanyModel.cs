@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlazorServerAPI.Models.Entities
 {
-    public class CompanyModel : BaseEntity, IValidatableObject
+    public class CompanyModel : OwnedEntity, IValidatableObject
     {
         [Required]
         public string CompanyName { get; set; }

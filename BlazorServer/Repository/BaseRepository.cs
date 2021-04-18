@@ -10,7 +10,7 @@ using BlazorServerAPI.Models.Entities;
 
 namespace BlazorServerAPI.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity 
+    public class BaseRepository<T> : IBaseRepository<T> where T : IBaseEntity 
     {
         public IMongoCollection<T> _documents { get;}
 
@@ -47,28 +47,6 @@ namespace BlazorServerAPI.Repository
             await _documents.DeleteOneAsync(filter);
         }
 
-        public async Task<T> CreateObject(T obj)
-        {
-            obj.Id = null;
-            await _documents.InsertOneAsync(obj);
-            return obj;
-        }
-
-        public async Task<T> UpdateObject(string objectId, T obj)
-        {
-            var oldobj = (await _documents.FindAsync(document => document.Id == objectId && document.OwnerId == obj.OwnerId)).SingleOrDefault();
-            if (oldobj != null)
-            {
-                obj.CreatedAt = oldobj.CreatedAt;
-                await Update(objectId, obj);
-                return obj;
-            }
-            return oldobj;
-        }
-
-        public async Task<T> GetObject(string userId)
-        {
-            return (await _documents.FindAsync(document => document.OwnerId == userId)).SingleOrDefault();
-        }
+        
     }
 }

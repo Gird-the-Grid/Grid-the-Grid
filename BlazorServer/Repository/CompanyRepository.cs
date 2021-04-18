@@ -3,7 +3,7 @@ using BlazorServerAPI.Settings;
 
 namespace BlazorServerAPI.Repository
 {
-    public class CompanyRepository : BaseRepository<CompanyModel>
+    public class CompanyRepository : OwnedResourceRepository<CompanyModel>
     {
         public CompanyRepository(IMongoDbSettings settings) : base(settings, "companies")
         { }

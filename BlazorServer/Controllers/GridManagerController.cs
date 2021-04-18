@@ -1,5 +1,4 @@
 ﻿using BlazorServerAPI.Handlers;
-using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Utils.Exceptions;

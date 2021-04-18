@@ -7,7 +7,7 @@
 
         public static string ConfirmRegistrationBodyBuilder(string userId)
         {
-            //TODO: @first: check if this is illegal (see what SQ says). Olariu said no static methods in nonstatic classes. As for me, I like it.
+            //TODO: Remove hardcoded URI
             return $"Thanks for signing up with Gird-the-Grid!\r\n\r\n" +
                 $"You must follow this link to activate your account: http://localhost:49429/auth/confirm?userId={userId} \r\n\r\n" +
                 $"Have fun, and don't hesitate to contact us with your feedback.\r\n" +

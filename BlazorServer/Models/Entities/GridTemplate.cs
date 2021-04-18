@@ -3,7 +3,7 @@
 namespace BlazorServerAPI.Models.Entities
 {
     //TODO: validate this (edges must be between 1 and Vertexes * (vertexes -1) / 4, Vertexes must be between 2 and 1.9 kk 
-    public class GridTemplate : BaseEntity
+    public class GridTemplate : OwnedEntity
     {
         public GridTemplate() : base()
         { }
