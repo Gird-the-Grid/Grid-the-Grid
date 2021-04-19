@@ -29,10 +29,6 @@ namespace BlazorServerAPI.Controllers
         [HttpPost("configuration")]
         public async Task<IActionResult> CreateCompanyConfiguration([FromBody] CompanyModel companyConfiguration)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()).ToString());
-            }
             try
             {
                 companyConfiguration.OwnerId = HttpContext.Items["UserId"].ToString();
@@ -43,11 +39,11 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is MongoDB.Driver.MongoWriteException)
                 {
-                    return BadRequest(new ErrorResponse(error: "This company's configuration already exists").ToString());
+                    return BadRequest(new ErrorResponse(error:"This company's configuration already exists"));
                 }
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:"Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -56,10 +52,6 @@ namespace BlazorServerAPI.Controllers
         [HttpPut("configuration")]
         public async Task<IActionResult> UpdateCompanyConfiguration([FromBody] CompanyModel companyConfiguration)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
-            }
             try
             {
                 if (companyConfiguration.OwnerId != HttpContext.Items["UserId"].ToString())
@@ -75,13 +67,14 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:  "Internal server error", errorMessage: e.ToString()).ToString());
             }
         }
 
         [HttpGet("configuration")]
         public async Task<IActionResult> GetCompanyConfiguration(string userId)
         {
+
             try
             {
                 if (userId != HttpContext.Items["UserId"].ToString())
@@ -95,7 +88,7 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:"Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -104,10 +97,6 @@ namespace BlazorServerAPI.Controllers
         [HttpPost("grid")]
         public async Task<IActionResult> CreateGridParameters([FromBody] GridTemplate gridTemplate)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()).ToString());
-            }
             try
             {
                 gridTemplate.OwnerId = HttpContext.Items["UserId"].ToString();
@@ -127,10 +116,6 @@ namespace BlazorServerAPI.Controllers
         [HttpPut("grid")]
         public async Task<IActionResult> UpdateGridParameters([FromBody] GridTemplate grid)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
-            }
             try
             {
                 if (grid.OwnerId != HttpContext.Items["UserId"].ToString())
@@ -144,7 +129,7 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:  "Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -153,6 +138,7 @@ namespace BlazorServerAPI.Controllers
         [HttpGet("grid")]
         public async Task<IActionResult> GetGridParameters(string userId)
         {
+            //TODO: find a way to check if userId is valid guid. Guid.TryParse(userId, out _) is not working, mongo has another format
             try
             {
                 if (userId != HttpContext.Items["UserId"].ToString())
@@ -166,7 +152,7 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:"Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }

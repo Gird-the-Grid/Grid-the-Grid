@@ -23,4 +23,6 @@ namespace BlazorServerAPI.Models.Entities
         [Required]
         public int Edges { get; set; }
     }
+
+    
 }

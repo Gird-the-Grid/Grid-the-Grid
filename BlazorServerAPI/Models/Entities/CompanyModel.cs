@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlazorServerAPI.Models.Entities
 {
-    public class CompanyModel : OwnedEntity, IValidatableObject
+    public class CompanyModel : OwnedEntity
     {
         [Required]
         public string CompanyName { get; set; }
@@ -27,20 +26,11 @@ namespace BlazorServerAPI.Models.Entities
             TaxRates = taxRates;
         }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            //TODO: [Required] not working for TaxRates field, to be verrified here or see if FluentValidation solves this
-            if (Country.Length != 2)
-            {
-                yield return new ValidationResult(
-                       $"Country has to have 2 letters"
-                );
-            }
-        }
-
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
         }
     }
+
+    
 }

@@ -77,7 +77,9 @@
 
         response = await r.Content.ReadAsStringAsync();
 
+        Console.WriteLine(response);
         var loginResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
+        Console.WriteLine(loginResponse);
 
         if (loginResponse.Success)
         {

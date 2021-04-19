@@ -10,10 +10,16 @@ using BlazorServerAPI.Repository;
 using BlazorServerAPI.Middlewares;
 using BlazorServerAPI.Settings;
 using BlazorServerAPI.Services;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using BlazorServerAPI.Models.Responses;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace BlazorServerAPI
 {
-    
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -53,7 +59,26 @@ namespace BlazorServerAPI
 
             services.AddSingleton<CompanyRepository>();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(s =>
+                {
+                    s.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    s.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    //var errors = JsonConvert.SerializeObject(context.ModelState.Values.Where(v => v.Errors.Count > 0).SelectMany(v => v.Errors).Select(v => v.ErrorMessage));
+                    var errors = string.Join(", ", context.ModelState.Values.Where(v => v.Errors.Count > 0).SelectMany(v => v.Errors).Select(v => v.ErrorMessage));
+                    return new BadRequestObjectResult(new ErrorResponse(error: errors))
+                    {
+                        ContentTypes = { "application/problem+json", "application/problem+xml" }
+                    };
+                };
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlazorServer", Version = "v1" });
