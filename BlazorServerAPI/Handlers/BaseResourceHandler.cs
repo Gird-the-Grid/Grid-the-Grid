@@ -19,7 +19,7 @@ namespace BlazorServerAPI.Handlers
         public virtual async Task<IResponse> CreateResource(T ownedEntity)
         {
             _ = await _resourceRepository.CreateObject(ownedEntity);
-            return new MessageResponse("Company settings updated");
+            return new MessageResponse($"{ownedEntity.GetType()} settings updated");
         }
 
         public async Task<IResponse> UpdateResource(T ownedEntity)
@@ -37,7 +37,7 @@ namespace BlazorServerAPI.Handlers
             var resource = await _resourceRepository.GetObject(userId);
             if (resource == null)
             {
-                return new ErrorResponse(error: "grid has no configuration");
+                return new ErrorResponse(error: $"{resource.GetType()} has no configuration");
             }
             return new MessageResponse(resource.ToString());
         } 
