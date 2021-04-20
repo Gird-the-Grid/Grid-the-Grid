@@ -37,7 +37,7 @@ namespace BlazorServerAPI.Controllers
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot have more than 1 company configuration").ToString());
                 }
                 companyConfiguration.OwnerId = HttpContext.Items["UserId"].ToString();
-                var response = await _companyHandler.CreateCompanyConfiguration(companyConfiguration);
+                var response = await _companyHandler.CreateResource(companyConfiguration);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
             }
             catch (Exception e)
@@ -68,7 +68,7 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot update non-existent resource").ToString());
                 }
-                var response = await _companyHandler.UpdateCompanyConfiguration(companyConfiguration);
+                var response = await _companyHandler.UpdateResource(companyConfiguration);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
             }
             catch (Exception e)

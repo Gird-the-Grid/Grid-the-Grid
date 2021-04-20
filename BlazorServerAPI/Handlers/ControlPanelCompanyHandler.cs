@@ -6,41 +6,17 @@ using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers
 {
-    public class ControlPanelCompanyHandler
+    public class ControlPanelCompanyHandler : BaseResourceHandler<CompanyModel>
     {
-        private readonly CompanyRepository _companyRepository;
 
-        public ControlPanelCompanyHandler(CompanyRepository companyRepository)
-        {
-            _companyRepository = companyRepository;
-        }
-        public async Task<IResponse> CreateCompanyConfiguration(CompanyModel company)
+        public ControlPanelCompanyHandler(CompanyRepository companyRepository) : base(companyRepository)
+        { }
+
+        public override async Task<IResponse> CreateResource(CompanyModel company)
         {
             var newCompanyConfiguration = new CompanyModel(company.CompanyName, company.CompanyIdentificationNumber, company.Country, company.TaxRates);
-            newCompanyConfiguration.OwnerId = company.OwnerId; //TODO add a new constructor with owner id
-            _ = await _companyRepository.CreateObject(newCompanyConfiguration);
-            return new MessageResponse("Company settings updated");
-        }
-        
-        public async Task<IResponse> UpdateCompanyConfiguration(CompanyModel company)
-        {
-            var updatedCompany = await _companyRepository.UpdateObject(company.Id, company);
-            if (updatedCompany == null)
-            {
-                return new ErrorResponse(error: "Invalid company id or illegal company modification");
-            }
-            return new MessageResponse("Company settings updated");
-        }
-
-        public async Task<IResponse> GetCompanyConfiguration(string userId)
-        {
-            //TODO: if not used anymore, delete?
-            var companyConfiguration = await _companyRepository.GetObject(userId);
-            if (companyConfiguration == null)
-            {
-                return new ErrorResponse(error: "company has no configuration");
-            }
-            return new MessageResponse(companyConfiguration.ToString());
+            newCompanyConfiguration.OwnerId = company.OwnerId;
+            return await base.CreateResource(newCompanyConfiguration);
         }
     }
 }
