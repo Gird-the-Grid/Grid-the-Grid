@@ -31,6 +31,11 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
+                var oldCompanyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                if (oldCompanyConfiguration != null)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot have more than 1 company configuration").ToString());
+                }
                 companyConfiguration.OwnerId = HttpContext.Items["UserId"].ToString();
                 var response = await _companyHandler.CreateCompanyConfiguration(companyConfiguration);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
@@ -39,11 +44,11 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is MongoDB.Driver.MongoWriteException)
                 {
-                    return BadRequest(new ErrorResponse(error:"This company's configuration already exists"));
+                    return BadRequest(new ErrorResponse(error: "This company's configuration already exists"));
                 }
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:"Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -58,6 +63,11 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
                 }
+                var oldCompanyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                if (oldCompanyConfiguration == null)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot update non-existent resource").ToString());
+                }
                 var response = await _companyHandler.UpdateCompanyConfiguration(companyConfiguration);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
             }
@@ -67,28 +77,33 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:  "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
         }
 
         [HttpGet("configuration")]
         public async Task<IActionResult> GetCompanyConfiguration(string userId)
         {
-
+            //TODO: Get has no awaits, do we change it to sync? or do we add a random await?
             try
             {
                 if (userId != HttpContext.Items["UserId"].ToString())
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
                 }
-                var companyConfiguration = await _companyHandler.GetCompanyConfiguration(userId);
-                return StatusCode(StatusCodes.Status200OK, companyConfiguration.ToString());
+                var companyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                if (companyConfiguration == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "company has no configuration").ToString());
+                }
+                var companyConfigurationResponse = new MessageResponse(companyConfiguration.ToString());
+                return StatusCode(StatusCodes.Status200OK, companyConfigurationResponse.ToString());
             }
             catch (Exception e)
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:"Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -99,6 +114,11 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
+                var oldGridModel = (GridModel)HttpContext.Items["Grid"];
+                if (oldGridModel != null)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot have more than 1 grid template").ToString());
+                }
                 gridTemplate.OwnerId = HttpContext.Items["UserId"].ToString();
                 var response = await _gridHandler.CreateGridParameters(gridTemplate);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
@@ -122,6 +142,11 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
                 }
+                var oldGridModel = (GridModel)HttpContext.Items["Grid"];
+                if (oldGridModel == null)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot update non-existent resource").ToString());
+                }
                 var response = await _gridHandler.UpdateGridParameters(grid);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
             }
@@ -129,7 +154,7 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:  "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
@@ -138,6 +163,7 @@ namespace BlazorServerAPI.Controllers
         [HttpGet("grid")]
         public async Task<IActionResult> GetGridParameters(string userId)
         {
+            //TODO: Get has no awaits, do we change it to sync? or do we add a random await?
             //TODO: find a way to check if userId is valid guid. Guid.TryParse(userId, out _) is not working, mongo has another format
             try
             {
@@ -145,14 +171,19 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
                 }
-                var gridParameters = await _gridHandler.GetGridParameters(userId);
-                return StatusCode(StatusCodes.Status200OK, gridParameters.ToString());
+                var gridModel = (GridModel)HttpContext.Items["Grid"];
+                if (gridModel == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
+                }
+                var gridModelResponse = new MessageResponse(gridModel.ToString());
+                return StatusCode(StatusCodes.Status200OK, gridModelResponse.ToString());
             }
             catch (Exception e)
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error:"Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }

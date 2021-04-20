@@ -15,7 +15,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using BlazorServerAPI.Models.Responses;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace BlazorServerAPI
 {
@@ -108,6 +107,7 @@ namespace BlazorServerAPI
                 appBuilder =>
                 {
                     appBuilder.UseMiddleware<JwtMiddleware>();
+                    appBuilder.UseMiddleware<ConfigurationCheckerMiddleware>();
                 }
             );
 

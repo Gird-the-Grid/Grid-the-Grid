@@ -1,6 +1,7 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers
@@ -33,6 +34,7 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> GetCompanyConfiguration(string userId)
         {
+            //TODO: if not used anymore, delete?
             var companyConfiguration = await _companyRepository.GetObject(userId);
             if (companyConfiguration == null)
             {
