@@ -8,8 +8,6 @@ namespace BlazorServerAPI.Handlers
 {
     public class ControlPanelGridHandler : BaseResourceHandler<GridModel>
     {
-        private readonly GridRepository _gridRepository;
-
         public ControlPanelGridHandler(GridRepository gridRepository) : base(gridRepository)
         {  }
 
