@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorServer\BlazorServerAPI.csproj" />
+    <ProjectReference Include="..\BlazorServerAPI\BlazorServerAPI.csproj" />
   </ItemGroup>
 
 </Project>
