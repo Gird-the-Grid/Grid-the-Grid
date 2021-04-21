@@ -37,7 +37,7 @@ namespace BlazorServerAPI.Handlers
             var resource = await _resourceRepository.GetObject(userId);
             if (resource == null)
             {
-                return new ErrorResponse(error: $"{resource.GetType()} has no configuration");
+                return new ErrorResponse(error: $"{typeof(T)} has no configuration");
             }
             return new MessageResponse(resource.ToString());
         } 

@@ -34,7 +34,7 @@ namespace BlazorServerAPI.Middlewares
         }
 
 
-        private async Task attackConfigurationToContext<T>(HttpContext context, string configurationType, OwnedResourceRepository<T> ownedResourceRepository, string userId) where T : OwnedEntity
+        private static async Task attackConfigurationToContext<T>(HttpContext context, string configurationType, OwnedResourceRepository<T> ownedResourceRepository, string userId) where T : OwnedEntity
         {
             var configuration = await ownedResourceRepository.GetObject(userId);
             context.Items[configurationType] = configuration;
