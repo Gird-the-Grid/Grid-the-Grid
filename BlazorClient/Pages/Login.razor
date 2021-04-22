@@ -8,18 +8,31 @@
 
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
-    @if (!sessionStorage.GetItem<bool>("logged"))
+    @if (tooManyAttempts)
     {
-        @if (sessionStorage.GetItem<string>("loginError") != null)
+        <h2 class=" h1-title"> Too many attempts were made in a short time. Come back later!</h2>
+    }
+    else
+    {
+        @if (!sessionStorage.GetItem<bool>("logged") && !waiting)
         {
-            <h2 class="h1-title"> @writeFromSession("loginError")</h2>
+            @if (sessionStorage.GetItem<string>("loginError") != null)
+            {
+                <h2 class="h1-title"> @writeFromSession("loginError")</h2>
+            }
+            <h2 class="h1-title"> Already a client? Login</h2>
         }
-        <h2 class="h1-title"> Already a client? Login</h2>
+        @if (waiting)
+        {
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        }
     }
 </div>
 <br />
 
-@if (!sessionStorage.GetItem<bool>("logged"))
+@if (!sessionStorage.GetItem<bool>("logged") && !waiting && !tooManyAttempts)
 {
     <div class="flex-container" style="margin: 0 auto; display:flex; justify-content:center; width:50%">
         <EditForm Model="@loginModel" OnValidSubmit="@Log_in">
@@ -54,6 +67,11 @@
 
     private string response;
 
+    private bool waiting;
+    private bool tooManyAttempts;
+    private DateTime start;
+    private int LoggingAttempts=0;
+
     private class LoginPacket
     {
         public string username { get; set; }
@@ -71,12 +89,12 @@
     private async Task Log_in()
     {
         LoginPacket lp = new LoginPacket(loginModel.username, loginModel.password);
-
+        waiting = true;
         //var r = await Http.PostAsJsonAsync("https://dsctraining.ancestormithril.repl.co/auth/login", lp); // other server
         var r = await Http.PostAsJsonAsync("http://localhost:49429/auth/login", new { email = lp.username, password = lp.password }); // our server
 
         response = await r.Content.ReadAsStringAsync();
-
+        waiting = false;
         Console.WriteLine(response);
         var loginResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
         Console.WriteLine(loginResponse);
@@ -93,6 +111,21 @@
         }
         else
         {
+            if (LoggingAttempts == 0)
+            {
+                start = DateTime.Now;
+            }
+            LoggingAttempts++;
+            if(LoggingAttempts>10)
+                if((DateTime.Now-start).TotalMinutes<=2)
+                {
+                    tooManyAttempts = true;
+                }
+                else
+                {
+                    LoggingAttempts = 0;
+                    start = DateTime.Now;
+                }
             //TODO: increment login error count, if too many block user or sth
             //TODO: add access error count on back-end and if too many password failed send mail with penetration report to user
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response);
