@@ -9,7 +9,7 @@
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 @inject NavigationManager Nav
 
-<div class="text">
+<div class="control-panel-flex" style="margin: 0 auto; display:flex;">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
     @if (!sessionStorage.GetItem<bool>("logged"))
     {

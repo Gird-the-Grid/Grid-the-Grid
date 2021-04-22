@@ -7,24 +7,24 @@
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
     @if (error)
     {
-        <h1 class="h1-title"> An error has occurred!</h1>
-        <h1 class="h1-title"> @mesaj_eroare</h1>
+        <h1 class="h1-error" style="color:red;"> An error has occurred!</h1>
+        <h2 class="h1-error" style="color:red;">@mesaj_eroare</h2>
     }
     @if (!waiting)
-    {    
+    {
         if (!registered)
         {
             <h2 class="h1-title"> Please, register so we can get started</h2>
         }
         else
         {
-            <br/>
+            <br />
             <h2 class="h1-title"> Verify your email!</h2>
         }
     }
     else
     {
-        <div class="spinner-border"  style="width: 3rem; height: 3rem;" role="status">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     }

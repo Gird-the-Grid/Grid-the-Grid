@@ -14,7 +14,11 @@ body {
     font-family: 'Bebas Neue', cursive;
     color: white;
 }
+.control-panel-flex{
+    margin:0 !important;
+    display:flex;
 
+}
 .row {
     width: 1000px;
     height: 300px;
