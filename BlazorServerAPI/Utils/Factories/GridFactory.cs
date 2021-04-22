@@ -8,7 +8,7 @@ using static System.Linq.Enumerable; //C# 6.0
 
 namespace BlazorServerAPI.Utils.Factories
 {
-    public class GridFactory : IAbstractFactory
+    public class GridFactory : IBaseEntityFactory<GridModel>
     {
         private readonly int _vertexes;
         private readonly int _edges;
@@ -24,7 +24,7 @@ namespace BlazorServerAPI.Utils.Factories
             Debug.Assert(_edges <= _vertexes * (_vertexes - 1) / 4, "Too many edges");
         }
 
-        public IBaseEntity Create()
+        public GridModel Create()
         {
             AdjacencyGraph<string, Edge<string>> graph;
             Dictionary<Edge<string>, double> edgeCost;

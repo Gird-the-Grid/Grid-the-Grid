@@ -18,8 +18,9 @@
                 <table class="table table-dark table-hover">
                     <tr>
                         <td scope="col">Connection</td>
-                        <td scope="col">Power</td>
-                        <td scope="col">MaxPower</td>
+                        <td scope="col">Instant Power</td>
+                        <td scope="col">Average Power</td>
+                        <td scope="col">Max Power</td>
                     </tr>
                     @if (gridWeights != null)
                     {
@@ -27,7 +28,8 @@
                         {
                             <tr>
                                 <td>@conn.Key</td>
-                                <td>@conn.Value</td>
+                                <td>@conn.Value.ToString()</td>
+                                <td>@averageEdgeCost[conn.Key].ToString()</td>
                                 <td>@((string)edgeCost[conn.Key])</td>
                             </tr>
                         }
@@ -51,9 +53,12 @@
 }
 
 @code{
-    private Dictionary<string, string> gridWeights;
+    private Dictionary<string, double> gridWeights;
+    private Dictionary<string, double> averageEdgeCost;
     private JObject gridParameters;
     private JObject edgeCost;
+
+    private int requestsMade;
 
     protected async override void OnInitialized()
     {
@@ -87,10 +92,24 @@
                 return;
             }
             var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
-            gridWeights = JsonConvert.DeserializeObject<Dictionary<string, string>>(mRes.Message);
+            gridWeights = JsonConvert.DeserializeObject<Dictionary<string, double>>(mRes.Message);
         }
 
         {
+            if (averageEdgeCost == null)
+            {
+                averageEdgeCost = gridWeights;
+                requestsMade = 0;
+            }
+            ++requestsMade;
+            foreach (var connection in averageEdgeCost)
+            {
+                averageEdgeCost[connection.Key] = (connection.Value * requestsMade + gridWeights[connection.Key]) / (requestsMade + 1);
+            }
+        }
+
+        {
+            // eu, pt @first: ??? de ce faci acest request cand deja ai datele astea deja preluate? Nu se schimba niciodata, trebuie sa le iei numa o data
             var request = new HttpRequestMessage()
             {
                 Method = new HttpMethod("GET"),
