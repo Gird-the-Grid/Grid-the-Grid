@@ -28,9 +28,14 @@
                         {
                             <tr>
                                 <td>@conn.Key</td>
-                                <td>@conn.Value.ToString()</td>
-                                <td>@averageEdgeCost[conn.Key].ToString()</td>
-                                <td>@((string)edgeCost[conn.Key])</td>
+                                @if (float.Parse(conn.Value.ToString()) > 0.85f* float.Parse(((string)edgeCost[conn.Key]))) { 
+                                    <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                else {
+                                    <td>@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                <td>@Math.Round(float.Parse(averageEdgeCost[conn.Key].ToString()),4).ToString()</td>
+                                <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])),4).ToString()</td>
                             </tr>
                         }
                     }
