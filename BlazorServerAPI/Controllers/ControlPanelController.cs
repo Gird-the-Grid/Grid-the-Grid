@@ -188,6 +188,34 @@ namespace BlazorServerAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
         }
+
+        [HttpGet("grid_dot")]
+        public async Task<IActionResult> GetGridDotString(string userId)
+        {
+            try
+            {
+                if (userId != HttpContext.Items["UserId"].ToString())
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                }
+                var gridModel = (GridModel)HttpContext.Items["Grid"];
+                if (gridModel == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
+                }
+                var response = await _gridHandler.GetGridDotString(userId);
+                var gridModelResponse = new MessageResponse(response);
+                return StatusCode(StatusCodes.Status200OK, gridModelResponse.ToString());
+            }
+            catch (Exception e)
+            {
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
     }
 
 

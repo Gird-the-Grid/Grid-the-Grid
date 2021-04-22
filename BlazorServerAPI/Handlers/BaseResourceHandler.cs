@@ -10,7 +10,7 @@ namespace BlazorServerAPI.Handlers
 {
     public class BaseResourceHandler<T> : IBaseResourceHandler<T> where T : OwnedEntity
     {
-        private readonly OwnedResourceRepository<T> _resourceRepository;
+        protected readonly OwnedResourceRepository<T> _resourceRepository;
         public BaseResourceHandler(OwnedResourceRepository<T> resourceRepository)
         {
             _resourceRepository = resourceRepository;

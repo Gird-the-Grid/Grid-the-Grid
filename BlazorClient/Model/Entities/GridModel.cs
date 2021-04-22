@@ -4,6 +4,8 @@
     {
         public string Graph { get; set; }
 
+        public string Dot { get; set; }
+
         public string EdgeCost { get; set; }
 
         public string OwnerId { get; set; }

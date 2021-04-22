@@ -2,6 +2,9 @@
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
 using BlazorServerAPI.Utils.Factories;
+using Newtonsoft.Json;
+using QuickGraph;
+using QuickGraph.Graphviz;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers
@@ -23,7 +26,13 @@ namespace BlazorServerAPI.Handlers
             var newGrid = new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges).Create();
             newGrid.Id = gridTemplate.Id;
             newGrid.OwnerId = gridTemplate.OwnerId;
-            return await base.UpdateResource(newGrid);
+            return await UpdateResource(newGrid);
+        }
+
+        public async Task<string> GetGridDotString(string userId)
+        {
+            var grid = await _resourceRepository.GetObject(userId);
+            return grid.Dot;
         }
     }
 }
