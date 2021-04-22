@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Utils.Factories
 {
-    public interface IBaseEntityFactory<T> where T : IBaseEntity
+    public interface IBaseEntityFactory<out T> where T : IBaseEntity
     {
         T Create();
     }

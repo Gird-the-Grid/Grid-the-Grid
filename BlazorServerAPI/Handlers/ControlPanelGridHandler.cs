@@ -13,14 +13,14 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> CreateGridParameters(GridTemplate gridTemplate)
         {
-            var newGrid = (GridModel)(new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges)).Create(); //TODO: see if there's a way to return a GridModel and not convert
+            var newGrid = new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges).Create();
             newGrid.OwnerId = gridTemplate.OwnerId;
             return await base.CreateResource(newGrid);
         }
 
         public async Task<IResponse> UpdateGridParameters(GridTemplate gridTemplate)
         {
-            var newGrid = (GridModel)(new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges)).Create();
+            var newGrid = new GridFactory(gridTemplate.Vertexes, gridTemplate.Edges).Create();
             newGrid.Id = gridTemplate.Id;
             newGrid.OwnerId = gridTemplate.OwnerId;
             return await base.UpdateResource(newGrid);
