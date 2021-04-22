@@ -9,11 +9,12 @@
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 @inject NavigationManager NavManager
+@inject IJSRuntime JS
 
 @if (sessionStorage.GetItem<bool>("logged"))
 {
     <div class="container">
-        <div class="row">
+        <div class="row" style="height: auto;">
             <div class="col">
                 <table class="table table-dark table-hover">
                     <tr>
@@ -28,29 +29,34 @@
                         {
                             <tr>
                                 <td>@conn.Key</td>
-                                @if (float.Parse(conn.Value.ToString()) > 0.85f* float.Parse(((string)edgeCost[conn.Key]))) { 
+                                @if (float.Parse(conn.Value.ToString()) > 0.85f * float.Parse(((string)edgeCost[conn.Key])))
+                                {
                                     <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
                                 }
-                                else {
+                                else
+                                {
                                     <td>@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
                                 }
-                                <td>@Math.Round(float.Parse(averageEdgeCost[conn.Key].ToString()),4).ToString()</td>
-                                <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])),4).ToString()</td>
+                                <td>@Math.Round(float.Parse(averageEdgeCost[conn.Key].ToString()), 4).ToString()</td>
+                                <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])), 4).ToString()</td>
                             </tr>
                         }
                     }
                 </table>
             </div>
             <div class="col">
-                <div class="bd-example">
-
+                <div class="col-md">
+                    The  automatic  speed  controller  of  the  generating  units  should enable an adjustable value of statism between 2% - 12%, the dead band of the entire control sys-tem should be less than +10 mHz, and the frequency set point  should  be  adjustable  within  the  47.5  and  52  Hz  range.
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="height: auto;">
             <div class="col">
-                <div class="bd-example">
-
+                <div id="mynetwork">
+                    <div class="vis network-frame" style="position: relative; overflow: hidden; width: 100%; height: 400px;">
+                        <canvas style="position: relative; user-select: none; touch-action: pan-y; width: 100%; height: 400px; ">
+                        </canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,6 +82,29 @@
 #pragma warning disable CS4014
         SetInterval(async () => await RefreshData(), TimeSpan.FromSeconds(3));
 #pragma warning restore CS4014
+
+        {
+            var request = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri("http://localhost:49429/control_panel/grid_dot?userId=" + sessionStorage.GetItem<string>("userId")),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+            var response = await Http.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
+            var iRes = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
+            if (!iRes.Success)
+            {
+                // ERROR
+                return;
+            }
+            var mRes = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
+
+#pragma warning disable CS4014
+            JS.InvokeAsync<string>("createGraph", mRes.Message);
+#pragma warning restore CS4014
+        }
     }
 
     private async Task RefreshData()

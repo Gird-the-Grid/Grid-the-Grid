@@ -9,7 +9,7 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="BlazorClient.styles.css" rel="stylesheet" />
-    <link href="css/forms.css" rel="stylesheet"/>
+    <link href="css/forms.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -20,6 +20,49 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script>
+    <script type="text/javascript">
+        function createGraph(strstr) {
+            // provide data in the DOT language
+            var DOTstring = strstr;
+            var parsedData = vis.network.dotparser.parseDOT(DOTstring);
+
+            var data = {
+                nodes: parsedData.nodes,
+                edges: parsedData.edges
+            };
+
+            // create a network
+            var container = document.getElementById('mynetwork');
+            var options = {
+                height: "350px",
+                nodes: {
+                    borderWidth: 4,
+                    size: 30,
+                    color: {
+                        border: "blue",
+                        background: "white",
+                    },
+                    font: { color: "#eeeeee" },
+                },
+                edges: {
+                    color: "black",
+                },
+            };
+            var network = new vis.Network(container, data, options);
+            network.on("beforeDrawing", function (ctx) {
+                // save current translate/zoom
+                ctx.save();
+                // reset transform to identity
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                // fill background with solid white
+                ctx.fillStyle = 'rebeccapurple';
+                ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+                // restore old transform
+                ctx.restore();
+            });
+        }
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 
