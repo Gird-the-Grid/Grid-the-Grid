@@ -11,7 +11,7 @@
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
     @if (tooManyAttempts)
     {
-        <h2 class=" h1-title"> Too many attempts were made in a short time. Come back later!</h2>
+        <h2 class="h1-error" style="color:red;"> Too many attempts were made in a short time. Come back later!</h2>
     }
     else
     {
@@ -19,7 +19,7 @@
         {
             @if (sessionStorage.GetItem<string>("loginError") != null)
             {
-                <h2 class="h1-title"> @writeFromSession("loginError")</h2>
+                <h2 class="h1-error" style="color:red;"> @writeFromSession("loginError")</h2>
             }
             <h2 class="h1-title"> Already a client? Login</h2>
         }
