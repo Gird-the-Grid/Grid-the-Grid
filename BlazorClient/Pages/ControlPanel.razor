@@ -5,6 +5,8 @@
 @using BlazorClient.Model.Entities
 @using BlazorClient.Model.Responses
 @using Newtonsoft.Json
+@using System.Linq
+@using System.Reflection
 @inject HttpClient Http
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 @inject NavigationManager Nav
@@ -15,11 +17,19 @@
     {
         <h2 class="h1-title"> TODO: redirect on register or login </h2>
     }
-    <p>@companyConfiguration</p>
-    <p>@gridParameters</p>
 </div>
 <br />
-
+<div class="control-panel-flex" style="margin: 0 auto; display:flex;">
+    <table id="CompanyTable" class="table" bgcolor="white" cellspacing="0">
+        @foreach (var property in companyModel.GetType().GetProperties())
+        {
+            <tr>
+                <th>@property.Name</th>
+                <td>@property.GetValue(companyModel)</td>
+            </tr>
+        }
+    </table>
+</div>
 @if (sessionStorage.GetItem<bool>("logged"))
 {
     <div class="flex-container" style="margin: 0 auto; display:flex; justify-content:center; width:50%">
