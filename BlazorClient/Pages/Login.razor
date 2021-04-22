@@ -6,11 +6,12 @@
 @inject NavigationManager NavManager
 @inject NavMenuService navMenuService
 
+
 <div class="text">
     <h1 class="h1-title"> Welcome to Grid the Grid</h1><br />
     @if (tooManyAttempts)
     {
-        <h2 class="h1-error" style="color:red;"> Too many attempts were made in a short time. Come back later!</h2>
+        <h2 class=" h1-title"> Too many attempts were made in a short time. Come back later!</h2>
     }
     else
     {
@@ -18,7 +19,7 @@
         {
             @if (sessionStorage.GetItem<string>("loginError") != null)
             {
-                <h2 class="h1-error" style="color:red;"> @writeFromSession("loginError")</h2>
+                <h2 class="h1-title"> @writeFromSession("loginError")</h2>
             }
             <h2 class="h1-title"> Already a client? Login</h2>
         }
@@ -70,7 +71,7 @@
     private bool waiting;
     private bool tooManyAttempts;
     private DateTime start;
-    private int LoggingAttempts=0;
+    private int LoggingAttempts = 0;
 
     private class LoginPacket
     {
@@ -83,8 +84,6 @@
             password = p;
         }
     }
-
-
 
     private async Task Log_in()
     {
@@ -112,31 +111,30 @@
         else
         {
             if (LoggingAttempts == 0)
-            {
                 start = DateTime.Now;
-            }
             LoggingAttempts++;
-            if(LoggingAttempts>10)
-                if((DateTime.Now-start).TotalMinutes<=2)
+            if (LoggingAttempts > 10)
+            { 
+                if ((DateTime.Now - start).TotalMinutes <= 2)
                 {
                     tooManyAttempts = true;
+                    StateHasChanged();
+                    await Task.Delay(50000);
+                    tooManyAttempts = false;
                 }
-                else
-                {
-                    LoggingAttempts = 0;
-                    start = DateTime.Now;
-                }
-            //TODO: increment login error count, if too many block user or sth
+                LoggingAttempts = 0;
+                start = DateTime.Now;
+            }
             //TODO: add access error count on back-end and if too many password failed send mail with penetration report to user
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response);
             sessionStorage.SetItem<bool>("logged", false);
             sessionStorage.SetItem<string>("loginError", errorResponse.Error);
         }
-
         await InvokeAsync(() =>
         {
             StateHasChanged();
         });
         //TODO: maybe  add redirect page when nothing else to do
     }
+
 }
