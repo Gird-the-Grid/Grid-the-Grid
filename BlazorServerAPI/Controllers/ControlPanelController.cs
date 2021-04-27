@@ -84,7 +84,6 @@ namespace BlazorServerAPI.Controllers
         [HttpGet("configuration")]
         public async Task<IActionResult> GetCompanyConfiguration(string userId)
         {
-            //TODO: Get has no awaits, do we change it to sync? or do we add a random await?
             try
             {
                 if (userId != HttpContext.Items["UserId"].ToString())
@@ -96,7 +95,11 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "company has no configuration").ToString());
                 }
-                var companyConfigurationResponse = new MessageResponse(companyConfiguration.ToString());
+                MessageResponse companyConfigurationResponse = null;
+                await Task.Run(() =>
+                {
+                    companyConfigurationResponse = new MessageResponse(companyConfiguration.ToString());
+                });
                 return StatusCode(StatusCodes.Status200OK, companyConfigurationResponse.ToString());
             }
             catch (Exception e)
@@ -176,7 +179,11 @@ namespace BlazorServerAPI.Controllers
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
                 }
-                var gridModelResponse = new MessageResponse(gridModel.ToString());
+                MessageResponse gridModelResponse = null;
+                await Task.Run(() =>
+                {
+                    gridModelResponse = new MessageResponse(gridModel.ToString());
+                });
                 return StatusCode(StatusCodes.Status200OK, gridModelResponse.ToString());
             }
             catch (Exception e)

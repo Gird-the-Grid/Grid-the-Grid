@@ -43,6 +43,24 @@ namespace BlazorServerAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
         }
+
+        [HttpGet("energy_cost")]
+        public async Task<IActionResult> GetEnergyCost()
+        {
+            try
+            {
+                var energyCost = await _gridManagerHandler.GetEnergyCost();
+                return StatusCode(StatusCodes.Status200OK, energyCost.ToString());
+            }
+            catch (Exception e)
+            {
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
     }
 
 

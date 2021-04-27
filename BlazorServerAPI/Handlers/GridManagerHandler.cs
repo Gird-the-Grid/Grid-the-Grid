@@ -34,9 +34,24 @@ namespace BlazorServerAPI.Handlers
             foreach(var edge in edgeCost.Keys)
             {
                 var value = _rand.NextDouble(0, edgeCost[edge]);
+                if (_rand.Next() % 3 == 0)
+                {
+                    value = value / (_rand.Next() % 4) + 1;
+                }
                 currentEdgeCost.Add(edge, value);
             }
             return new MessageResponse(JsonConvert.SerializeObject(currentEdgeCost));
+        }
+
+
+        public async Task<IResponse> GetEnergyCost()
+        {
+            var price = 0.0;
+            await Task.Run(() =>
+            {
+                price = _rand.NextDouble(11, 15);
+            });
+            return new MessageResponse(price.ToString());
         }
 
     }
