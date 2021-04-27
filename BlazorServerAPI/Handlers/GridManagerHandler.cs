@@ -36,7 +36,7 @@ namespace BlazorServerAPI.Handlers
                 var value = _rand.NextDouble(0, edgeCost[edge]);
                 if (_rand.Next() % 3 == 0)
                 {
-                    value = value / (_rand.Next() % 4) + 1;
+                    value = value / (_rand.Next() % 4 + 1);
                 }
                 currentEdgeCost.Add(edge, value);
             }
