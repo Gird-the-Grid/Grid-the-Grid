@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.15.0" />
+    <PackageReference Include="Atomiv.Infrastructure.FluentValidation" Version="1.0.42" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Optivem.Framework.Infrastructure.FluentValidation" Version="1.0.23" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
