@@ -1,42 +1,57 @@
+using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
+
 namespace IntegrationTests
 {
     public class IntegrationTest1
     {
-        static readonly WebApplicationFactory<BlazorServerAPI.Startup> _factory = new WebApplicationFactory<BlazorServerAPI.Startup>();
+
+        static readonly CustomWebApplicationFactory<Startup> _factory = new CustomWebApplicationFactory<Startup>();
         static readonly HttpClient _client = _factory.CreateClient();
 
-    
+
         private readonly User _existentUser = new User();
         private readonly User _newUser = new User("first@mail.com", "testPassword1");
         public IMailService mailService = new MailService();
 
-        //PASS
-        [Fact]
-        public async Task Get_Should_Retrieve_Forecast()
+        [Theory]
+        [InlineData("/Register")]
+        [InlineData("/Grid")]
+        [InlineData("/ControlPanel")]
+        public async Task Get_Endpoints_For_Unlogged_User(string url)
         {
-            var request = await _client.GetAsync("/WeatherForecast");
-            var okResult = request.StatusCode;
-            Console.Write(okResult);
-            Assert.True(StatusCodes.Status200OK.Equals(request.StatusCode));
+            // Arrange
+
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
         }
+
 
         //PASS
         [Fact]
         public async Task Login_Success_StatusCode()
         {
-            
+            // Arrange
+
+            // Act
             var request = await _client.PostAsJsonAsync("/auth/login", _existentUser);
+
+            // Assert
             Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
-            
+
 
         }
 
@@ -44,10 +59,13 @@ namespace IntegrationTests
         [Fact]
         public async Task Login_False_StatusCode()
         {
+            // Arrange
 
+            // Act
             var request = await _client.PostAsJsonAsync("/auth/login", _newUser);
             var response = await request.Content.ReadAsStringAsync();
-            Console.Write(response.ToString());
+
+            //Assert
             Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
         }
 
@@ -55,8 +73,12 @@ namespace IntegrationTests
         [Fact]
         public async Task Register_False_StatusCode()
         {
+            // Arrange
 
+            // Act
             var request = await _client.PostAsJsonAsync("/auth/register", _existentUser);
+
+            //Assert
             Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
 
         }
