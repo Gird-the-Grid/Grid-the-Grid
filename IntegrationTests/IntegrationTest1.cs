@@ -3,6 +3,7 @@ using BlazorServerAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -34,9 +35,8 @@ namespace IntegrationTests
             var response = await _client.GetAsync(url);
 
             // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 401
-            Assert.Equal("text/html; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
         }
 
 
@@ -64,7 +64,7 @@ namespace IntegrationTests
             // Act
             var request = await _client.PostAsJsonAsync("/auth/login", _newUser);
             var response = await request.Content.ReadAsStringAsync();
-            
+
             //Assert
             Assert.False(StatusCodes.Status200OK.Equals(request.StatusCode));
         }
