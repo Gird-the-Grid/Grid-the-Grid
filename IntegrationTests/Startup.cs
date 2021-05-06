@@ -15,7 +15,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using BlazorServerAPI.Models.Responses;
 using System.Linq;
-using FluentAssertions.Common;
 
 namespace IntegrationTests
 {

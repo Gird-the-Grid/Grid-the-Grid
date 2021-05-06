@@ -1,8 +1,6 @@
 using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;

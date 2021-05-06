@@ -15,6 +15,9 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using BlazorServerAPI.Models.Responses;
 using System.Linq;
+using AspNetCoreRateLimit;
+using System.Collections.Generic;
+using BlazorServerAPI.Utils.RateLimiters;
 
 namespace BlazorServerAPI
 {
@@ -58,6 +61,24 @@ namespace BlazorServerAPI
 
             services.AddSingleton<CompanyRepository>();
 
+            #region Rate Limiting
+            services.AddMemoryCache();
+            services.AddSingleton<IClientPolicyStore, MemoryCacheClientPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.Configure<ClientRateLimitOptions>(options => {
+                options.GeneralRules = new List<RateLimitRule>
+                {
+                    new RateLimitRule
+                    {
+                        Endpoint = "*",
+                        Period = "1m",
+                        Limit = 300,
+                    },
+                };
+            });
+            services.AddSingleton<IRateLimitConfiguration, ElmahIoRateLimitConfiguration>();
+            #endregion
+
             services.AddControllers()
                 .AddFluentValidation(s =>
                 {
@@ -88,7 +109,7 @@ namespace BlazorServerAPI
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             DotEnv.Load();
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
