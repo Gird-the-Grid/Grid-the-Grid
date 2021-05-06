@@ -8,10 +8,10 @@
         public static string ConfirmRegistrationBodyBuilder(string userId)
         {
             //TODO: Remove hardcoded URI
-            return $"Thanks for signing up with Gird-the-Grid!\r\n\r\n" +
-                $"You must follow this link to activate your account: http://localhost:49429/auth/confirm?userId={userId} \r\n\r\n" +
-                $"Have fun, and don't hesitate to contact us with your feedback.\r\n" +
-                $"Gird-the-Grid team, \r\n" +
+            return $"Thanks for signing up with Gird-the-Grid!<br />\r\n<br />\r\n" +
+                $"You must follow this link to activate your account: http://localhost:49429/auth/confirm?userId={userId} <br />\r\n<br />\r\n" +
+                $"Have fun, and don't hesitate to contact us with your feedback.<br />\r\n" +
+                $"Gird-the-Grid team, <br />\r\n" +
                 $"http://localhost:49481/";
             //TODO: When no other task exists, maybe add css to mail
         }

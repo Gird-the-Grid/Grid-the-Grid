@@ -26,11 +26,6 @@ namespace BlazorServerAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User user)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO: use FluentValidation
-                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
-            }
             try
             {
                 var responseOnRegister = await _handler.Register(user);
@@ -53,10 +48,6 @@ namespace BlazorServerAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] User user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse(error: ModelState.Values.ToString()));
-            }
             try
             {
                 var responseOnLogin = await _handler.Login(user);
@@ -86,6 +77,42 @@ namespace BlazorServerAPI.Controllers
                 {
                     return BadRequest(new ErrorResponse(error: $"{userId} is not a valid confirmation link").ToString());
                 }
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
+        [HttpPost("reset_request")]
+        public async Task<IActionResult> ResetPasswordMailRequest([FromBody] User user)
+        {
+            try
+            {
+                var responseOnReset = await _handler.ResetPasswordMailRequest(user);
+                return StatusCode(StatusCodes.Status202Accepted, responseOnReset.ToString());
+            }
+            catch (Exception e)
+            {
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
+        [HttpPost("reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] User user)
+        {
+            try
+            {
+                var responseOnReset = await _handler.ResetPassword(user);
+                return StatusCode(StatusCodes.Status202Accepted, responseOnReset.ToString());
+            }
+            catch (Exception e)
+            {
                 if (e is ServerException)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());

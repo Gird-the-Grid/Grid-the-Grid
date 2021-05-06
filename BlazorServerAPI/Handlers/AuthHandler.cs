@@ -28,9 +28,9 @@ namespace BlazorServerAPI.Handlers
 
         public async Task<IResponse> Register(User user)
         {
-            #nullable enable
+#nullable enable
             var hashedPassword = new PasswordHasher<object?>().HashPassword(null, user.Password);
-            #nullable disable
+#nullable disable
             if (hashedPassword == null)
             {
                 throw new InvalidPasswordException("PasswordHasher failed, not enough entropy");
@@ -48,9 +48,9 @@ namespace BlazorServerAPI.Handlers
             {
                 return new ErrorResponse(error: "Invalid credentials");
             }
-            #nullable enable
+#nullable enable
             var passwordVerificationResult = new PasswordHasher<object?>().VerifyHashedPassword(null, result.Password, user.Password);
-            #nullable disable
+#nullable disable
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
                 return new ErrorResponse(error: "Invalid credentials");
@@ -70,6 +70,33 @@ namespace BlazorServerAPI.Handlers
                 return new ErrorResponse(error: "Invalid confirmation link. Link may have expired.");
             }
             return new MessageResponse("User confirmed.");
+        }
+
+        public async Task<IResponse> ResetPasswordMailRequest(User user)
+        {
+            var result = await _userService.FindUserByEmail(user.Email);
+            if (result == null)
+            {
+                return new ErrorResponse(error: "Invalid email");
+            }
+            await _mailService.SendEmailAsync(new ResetPasswordMailRequest(result.Email, result.Id));
+            return new MessageResponse("Reset Password Mail Sent.");
+        }
+        public async Task<IResponse> ResetPassword(User user)
+        {
+#nullable enable
+            var hashedPassword = new PasswordHasher<object?>().HashPassword(null, user.Password);
+#nullable disable
+            if (hashedPassword == null)
+            {
+                throw new InvalidPasswordException("PasswordHasher failed, not enough entropy");
+            }
+            var result = await _userService.ResetPassword(user.Id, hashedPassword);
+            if (result == null)
+            {
+                return new ErrorResponse(error: "Invalid user id");
+            }
+            return new MessageResponse("Password has been reset.");
         }
 
         private static string generateJwtToken(User user)
