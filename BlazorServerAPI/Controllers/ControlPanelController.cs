@@ -112,6 +112,33 @@ namespace BlazorServerAPI.Controllers
             }
         }
 
+        [HttpDelete("configuration")]
+        public async Task<IActionResult> DeleteCompanyConfiguration(string userId)
+        {
+            try
+            {
+                if (userId != HttpContext.Items["UserId"].ToString())
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                }
+                var companyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                if (companyConfiguration == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "company has no configuration").ToString());
+                }
+                var response = await _companyHandler.DeleteResource(userId);
+                return StatusCode(StatusCodes.Status204NoContent, response.ToString());
+            }
+            catch (Exception e)
+            {
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
         [HttpPost("grid")]
         public async Task<IActionResult> CreateGridParameters([FromBody] GridTemplate gridTemplate)
         {
@@ -195,6 +222,33 @@ namespace BlazorServerAPI.Controllers
             }
         }
 
+        [HttpDelete("grid")]
+        public async Task<IActionResult> DeleteGrid(string userId)
+        {
+            try
+            {
+                if (userId != HttpContext.Items["UserId"].ToString())
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                }
+                var gridModel = (GridModel)HttpContext.Items["Grid"];
+                if (gridModel == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
+                }
+                var response = await _gridHandler.DeleteResource(userId);
+                return StatusCode(StatusCodes.Status204NoContent, response.ToString());
+            }
+            catch (Exception e)
+            {
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+            }
+        }
+
         [HttpGet("grid_dot")]
         public async Task<IActionResult> GetGridDotString(string userId)
         {
@@ -222,6 +276,8 @@ namespace BlazorServerAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
         }
+
+        
     }
 
 

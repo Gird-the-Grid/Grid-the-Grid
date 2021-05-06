@@ -39,5 +39,12 @@ namespace BlazorServerAPI.Repository
             var filter = Builders<OwnedEntity>.Filter.Where(doc => doc.OwnerId == userId);
             return (await _documents.FindAsync<T>(filter)).SingleOrDefault();
         }
+
+        public async Task<T> DeleteObject(string userId)
+        {
+            //TODO: same as above
+            var filter = Builders<OwnedEntity>.Filter.Where(doc => doc.OwnerId == userId);
+            return await _documents.FindOneAndDeleteAsync<T>(filter);
+        }
     }
 }

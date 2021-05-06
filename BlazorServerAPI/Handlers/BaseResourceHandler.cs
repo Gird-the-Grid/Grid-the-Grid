@@ -40,6 +40,16 @@ namespace BlazorServerAPI.Handlers
                 return new ErrorResponse(error: $"{typeof(T)} has no configuration");
             }
             return new MessageResponse(resource.ToString());
-        } 
+        }
+
+        public async Task<IResponse> DeleteResource(string userId)
+        {
+            var resource = await _resourceRepository.DeleteObject(userId);
+            if (resource == null)
+            {
+                return new ErrorResponse(error: $"{typeof(T)} has no configuration");
+            }
+            return new MessageResponse("Deleted");
+        }
     }
 }
