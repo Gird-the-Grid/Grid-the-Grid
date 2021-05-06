@@ -6,6 +6,7 @@ using BlazorServerAPI.Services;
 using BlazorServerAPI.Utils.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Controllers
@@ -15,7 +16,7 @@ namespace BlazorServerAPI.Controllers
     public class AuthController : ControllerBase
     {
 
-       private readonly AuthHandler _handler;
+        private readonly AuthHandler _handler;
 
         public AuthController(UserRepository userService, IMailService mailService)
         {
@@ -35,15 +36,18 @@ namespace BlazorServerAPI.Controllers
                 var responseOnRegister = await _handler.Register(user);
                 return StatusCode(StatusCodes.Status201Created, responseOnRegister.ToString());
             }
-            catch (MongoDB.Driver.MongoWriteException)
+            catch (Exception e)
             {
-                return BadRequest(new ErrorResponse(error: "Email used").ToString());
-            }
-            catch (ServerException e)
-            {
+                if (e is MongoDB.Driver.MongoWriteException)
+                {
+                    return BadRequest(new ErrorResponse(error: "Email used").ToString());
+                }
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
-            //TODO: Add general exception
         }
 
         [HttpPost("login")]
@@ -58,12 +62,16 @@ namespace BlazorServerAPI.Controllers
                 var responseOnLogin = await _handler.Login(user);
                 return StatusCode(StatusCodes.Status202Accepted, responseOnLogin.ToString());
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
         }
-        
+
         [HttpGet("confirm")]
         public async Task<IActionResult> Confirm(string userId)
         {
@@ -72,11 +80,18 @@ namespace BlazorServerAPI.Controllers
                 var responseOnConfirm = await _handler.Confirm(userId);
                 return StatusCode(StatusCodes.Status202Accepted, responseOnConfirm.ToString());
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
+                if (e is FormatException)
+                {
+                    return BadRequest(new ErrorResponse(error: $"{userId} is not a valid confirmation link").ToString());
+                }
+                if (e is ServerException)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
             }
-            //TODO: Add general exception if needed. Here there-s a System.FormatException: '6071bd6e3f4909a7120824e21' is not a valid 24 digit hex string.
         }
     }
 }

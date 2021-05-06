@@ -166,7 +166,6 @@ namespace BlazorServerAPI.Controllers
         [HttpGet("grid")]
         public async Task<IActionResult> GetGridParameters(string userId)
         {
-            //TODO: Get has no awaits, do we change it to sync? or do we add a random await?
             //TODO: find a way to check if userId is valid guid. Guid.TryParse(userId, out _) is not working, mongo has another format
             try
             {
