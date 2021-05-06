@@ -18,11 +18,13 @@ namespace BlazorServerAPI.Handlers
     public class AuthHandler
     {
         private readonly UserRepository _userService;
+        private readonly SecurityRepository _securityService;
         private readonly IMailService _mailService;
 
-        public AuthHandler(UserRepository userService, IMailService mailService)
+        public AuthHandler(UserRepository userService, SecurityRepository securityService, IMailService mailService)
         {
             _userService = userService;
+            _securityService = securityService;
             _mailService = mailService;
         }
 
@@ -41,7 +43,7 @@ namespace BlazorServerAPI.Handlers
             return new MessageResponse("User created. Confirmation Mail Sent.");
         }
 
-        public async Task<IResponse> Login(User user)
+        public async Task<IResponse> Login(User user, string ip)
         {
             var result = await _userService.FindUserByEmail(user.Email);
             if (result == null)
@@ -53,6 +55,11 @@ namespace BlazorServerAPI.Handlers
 #nullable disable
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
+                var penetrationReport = await _securityService.RegisterNewAttack(user.Email, ip);
+                if (penetrationReport.PasswordAtempts > 10)
+                {
+                    await _mailService.SendEmailAsync(new PenetrationReportMailRequest(user.Email, penetrationReport));
+                }
                 return new ErrorResponse(error: "Invalid credentials");
             }
             if (passwordVerificationResult == PasswordVerificationResult.Success)

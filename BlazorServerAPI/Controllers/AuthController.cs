@@ -18,9 +18,9 @@ namespace BlazorServerAPI.Controllers
 
         private readonly AuthHandler _handler;
 
-        public AuthController(UserRepository userService, IMailService mailService)
+        public AuthController(UserRepository userService, SecurityRepository securityService, IMailService mailService)
         {
-            _handler = new AuthHandler(userService, mailService);
+            _handler = new AuthHandler(userService, securityService, mailService);
         }
 
         [HttpPost("register")]
@@ -50,7 +50,12 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                var responseOnLogin = await _handler.Login(user);
+                var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+                if (string.IsNullOrEmpty(ip))
+                {
+                    ip = "Unknown";
+                }
+                var responseOnLogin = await _handler.Login(user, ip);
                 return StatusCode(StatusCodes.Status202Accepted, responseOnLogin.ToString());
             }
             catch (Exception e)

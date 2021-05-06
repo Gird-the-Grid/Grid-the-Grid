@@ -43,23 +43,24 @@ namespace BlazorServerAPI
                         .AllowAnyHeader());
             });
 
+
+            #region Mail Settings
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, Services.MailService>();
+            #endregion
+
+            #region DB settings
             services.Configure<MongoDbSettings>(
                 Configuration.GetSection(nameof(MongoDbSettings))
             );
-
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-
-            services.AddTransient<IMailService, Services.MailService>();
-
             services.AddSingleton<IMongoDbSettings>(sp =>
                 sp.GetRequiredService<IOptions<MongoDbSettings>>().Value
             );
-
             services.AddSingleton<UserRepository>();
-
             services.AddSingleton<GridRepository>();
-
             services.AddSingleton<CompanyRepository>();
+            services.AddSingleton<SecurityRepository>();
+            #endregion
 
             #region Rate Limiting
             services.AddMemoryCache();
@@ -90,7 +91,6 @@ namespace BlazorServerAPI
             {
                 options.InvalidModelStateResponseFactory = context =>
                 {
-                    //var errors = JsonConvert.SerializeObject(context.ModelState.Values.Where(v => v.Errors.Count > 0).SelectMany(v => v.Errors).Select(v => v.ErrorMessage));
                     var errors = string.Join(", ", context.ModelState.Values.Where(v => v.Errors.Count > 0).SelectMany(v => v.Errors).Select(v => v.ErrorMessage));
                     return new BadRequestObjectResult(new ErrorResponse(error: errors))
                     {
