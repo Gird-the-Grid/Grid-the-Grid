@@ -13,12 +13,15 @@ namespace BlazorServerAPI.Utils.RateLimiters
         public string ResolveClient()
         {
             var request = httpContextAccessor.HttpContext?.Request;
+            if (request == null)
+            {
+                return "";
+            }
             var queryDictionary =Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(request.QueryString.ToString());
             if (queryDictionary.ContainsKey("api_key") && !string.IsNullOrWhiteSpace(queryDictionary["api_key"]))
             {
                 return queryDictionary["api_key"];
             }
-
             return Guid.NewGuid().ToString();
         }
     }
