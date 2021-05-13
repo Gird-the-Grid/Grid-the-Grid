@@ -22,7 +22,7 @@ namespace BlazorServerAPI.Models.Requests
             stringBuilder.Append($"<br />\r\nHave fun, and don't hesitate to contact us with your feedback.<br />\r\n" +
                 $"Gird-the-Grid team, <br />\r\n" +
                 $"http://localhost:49481/");
-            return stringBuilder;
+            return stringBuilder.ToString();
             //TODO: When no other task exists, maybe add css to mail
         }
     }
