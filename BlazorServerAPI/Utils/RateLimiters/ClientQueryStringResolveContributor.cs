@@ -6,7 +6,7 @@ namespace BlazorServerAPI.Utils.RateLimiters
 {
     public class ClientQueryStringResolveContributor : IClientResolveContributor
     {
-        private IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public ClientQueryStringResolveContributor(IHttpContextAccessor httpContextAccessor) => this.httpContextAccessor = httpContextAccessor;
 
