@@ -91,15 +91,15 @@
                                 }
                                 @if (float.Parse(conn.Value.ToString()) > float.Parse(averageEdgeCost[conn.Key].ToString()))
                                 {
-                                    <td>Ascendent</td>
+                                    <td>Asc.</td>
                                 }
                                 else
                                 {
-                                    <td>Descendent</td>
+                                    <td>Desc.</td>
                                 }
-                                <td>@(energyCost * (float.Parse(((string)edgeCost[conn.Key])) * 0.1 + (float.Parse(((string)edgeCost[conn.Key])) * 0.1) * companyModel.TaxRates / 100))</td>
-                                <td>@(float.Parse(conn.Value.ToString()) * energyCost)</td>
-                                <td>@(float.Parse(conn.Value.ToString()) * energyCost * companyModel.TaxRates / 100)</td>
+                                <td>@Math.Round(energyCost * (float.Parse(((string)edgeCost[conn.Key])) * 0.1 + (float.Parse(((string)edgeCost[conn.Key])) * 0.1) * companyModel.TaxRates / 100), 4)</td>
+                                <td>@Math.Round(float.Parse(conn.Value.ToString()) * energyCost, 4)</td>
+                                <td>@Math.Round(float.Parse(conn.Value.ToString()) * energyCost * companyModel.TaxRates / 100, 4)</td>
                                 <td>@GetAdvice(profit: float.Parse(conn.Value.ToString()) * energyCost, maxProfit: energyCost * float.Parse(((string)edgeCost[conn.Key])))</td>
                             </tr>
                         }
@@ -226,7 +226,7 @@
         double taxes = profit * companyModel.TaxRates / 100;
         if (profit - maintenanceCost - taxes <= 0)
         {
-            return $"This connection proves to be a bad investition, you lose {profit - maintenanceCost - taxes} per hour. Unless you expect a great increase of clients, you would lose funds in this area.";
+            return $"This connection proves to be a bad investition, you lose {Math.Round(profit - maintenanceCost - taxes, 4)}$ per hour. Unless you expect a great increase of clients, you would lose funds in this area.";
         }
         if (profit - maintenanceCost - taxes <= profit * 0.25) //albitrary 25%
         {
@@ -234,7 +234,7 @@
         }
         if (profit > maxProfit * 0.8)
         {
-            return $"The connection is working at {100 * profit / maxProfit}% capacity. It's a sign to increase the grid's capacity, you ought to consider further investing.";
+            return $"The connection is working at {Math.Round(100 * profit / maxProfit, 4)}% capacity. It's a sign to increase the grid's capacity, you ought to consider further investing.";
         }
         return "Keep up the good work! This connection is stable enough.";
     }
