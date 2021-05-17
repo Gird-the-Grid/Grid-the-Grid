@@ -1,5 +1,5 @@
 @page "/grid"
-
+@using BlazorClient.Model.Entities
 @using System.Net.Http
 @using System.Net.Http.Headers
 @using BlazorClient.Model.Responses
@@ -58,14 +58,73 @@
             <p>Wherever  networks  operating  with  different  voltages  are  in  close  proximity  and resistance areas of their earth systems overlap, the overlapping earth systems should be interconnected and the resistance of the overall earth system should be reduced to a safe value considering the maximum prospective earth fault currents at the site.</p>
             <p>HV metered supplies to generator premises require a combined HV earth system. The HV  earth  terminal  will  include  an  earth  connection  to  a DNOearth  electrode  system and  possibly  provide  a  metallic  path  to  the  point  where  the DNOHV  network  neutral pointis earthed.</p>
         </div>
+        @if (isAnalysisDone)
+        {
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <td scope="col">Connection</td>
+                        <td scope="col">Max capacity (kwh)</td>
+                        <td scope="col">Instant power (kwh)</td>
+                        <td scope="col">Tendency of growth</td>
+                        <td scope="col">Maintenance cost</td>
+                        <td scope="col">Profit</td>
+                        <td scope="col">Taxes</td>
+                        <td scope="col">Advice</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (staticGridWeights != null)
+                    {
+                        @foreach (var conn in staticGridWeights)
+                        {
+                            <tr>
+                                <td>@conn.Key</td>
+                                <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])), 4).ToString()</td>
+                                @if (float.Parse(conn.Value.ToString()) > 0.85f * float.Parse(((string)edgeCost[conn.Key])))
+                                {
+                                    <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                else
+                                {
+                                    <td>@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                @if (float.Parse(conn.Value.ToString()) > float.Parse(averageEdgeCost[conn.Key].ToString()))
+                                {
+                                    <td>Ascendent</td>
+                                }
+                                else
+                                {
+                                    <td>Descendent</td>
+                                }
+                                <td>@(energyCost * (float.Parse(((string)edgeCost[conn.Key])) * 0.1 + (float.Parse(((string)edgeCost[conn.Key])) * 0.1) * companyModel.TaxRates / 100))</td>
+                                <td>@(float.Parse(conn.Value.ToString()) * energyCost)</td>
+                                <td>@(float.Parse(conn.Value.ToString()) * energyCost * companyModel.TaxRates / 100)</td>
+                                <td>@GetAdvice(profit: float.Parse(conn.Value.ToString()) * energyCost, maxProfit: energyCost * float.Parse(((string)edgeCost[conn.Key])))</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <button @onclick="RequestAnalysis">
+                Request Analysis
+            </button>
+        }
     </div>
 }
 
 @code{
+    private double energyCost = 0;
+    private bool isAnalysisDone = false;
     private Dictionary<string, double> gridWeights;
+    private Dictionary<string, double> staticGridWeights;
     private Dictionary<string, double> averageEdgeCost;
     private JObject gridParameters;
     private JObject edgeCost;
+    private CompanyModel companyModel = new CompanyModel();
 
     private int requestsMade;
 
@@ -103,6 +162,81 @@
             JS.InvokeAsync<string>("createGraph", mRes.Message);
 #pragma warning restore CS4014
         }
+    }
+
+    private async Task RequestAnalysis()
+    {
+        {
+            var requestEnergyCost = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri("http://localhost:49429/grid_manager/energy_cost")
+            };
+            requestEnergyCost.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+            var response = await Http.SendAsync(requestEnergyCost);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
+            var successResponse = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
+            if (!successResponse.Success)
+            {
+                // ERROR
+                return;
+            }
+            var messageResponse = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
+            energyCost = Convert.ToDouble(messageResponse.Message);
+        }
+        {
+            if (gridWeights == null)
+            {
+                await RefreshData();
+            }
+            staticGridWeights = new Dictionary<string, double>(gridWeights);
+        }
+        {
+            var companyConfiguration = sessionStorage.GetItem<string>("companyConfiguration");
+            if (companyConfiguration == null)
+            {
+                var request = new HttpRequestMessage()
+                {
+                    Method = new HttpMethod("GET"),
+                    RequestUri = new Uri("http://localhost:49429/control_panel" + "/configuration?userId=" + sessionStorage.GetItem<string>("userId")),
+                };
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", sessionStorage.GetItem<string>("token"));
+                var response = await Http.SendAsync(request);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseBody);
+                var successResponse = JsonConvert.DeserializeObject<BaseResponse>(responseBody);
+                if (!successResponse.Success)
+                {
+                    // ERROR
+                    return;
+                }
+                var messageResponse = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
+                sessionStorage.SetItem<string>("companyConfiguration", messageResponse.Message);
+                companyConfiguration = messageResponse.Message;
+            }
+            companyModel = JsonConvert.DeserializeObject<CompanyModel>(companyConfiguration);
+        }
+        isAnalysisDone = true;
+    }
+
+    private string GetAdvice(double profit, double maxProfit)
+    {
+        double maintenanceCost = maxProfit * 0.1 + (maxProfit * 0.1) * companyModel.TaxRates / 100;
+        double taxes = profit * companyModel.TaxRates / 100;
+        if (profit - maintenanceCost - taxes <= 0)
+        {
+            return $"This connection proves to be a bad investition, you lose {profit - maintenanceCost - taxes} per hour. Unless you expect a great increase of clients, you would lose funds in this area.";
+        }
+        if (profit - maintenanceCost - taxes <= profit * 0.25) //albitrary 25%
+        {
+            return $"You are not on the losing end, however this connection's profit does not justify its high capacity. It is recommended to either decrease this grid's size to reduce the maintenance cost or you should provide to more clients.";
+        }
+        if (profit > maxProfit * 0.8)
+        {
+            return $"The connection is working at {100 * profit / maxProfit}% capacity. It's a sign to increase the grid's capacity, you ought to consider further investing.";
+        }
+        return "Keep up the good work! This connection is stable enough.";
     }
 
     private async Task RefreshData()
