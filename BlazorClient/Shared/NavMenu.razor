@@ -67,6 +67,27 @@
     private async Task Log_out()
     {
         sessionStorage.SetItem<bool>("logged", false);
+        if (sessionStorage.GetItem<string>("loginError") != null)
+        {
+            sessionStorage.RemoveItem("loginError");
+        }
+        if (sessionStorage.GetItem<string>("token") != null)
+        {
+            sessionStorage.RemoveItem("token");
+        }
+        if (sessionStorage.GetItem<string>("userId") != null)
+        {
+            sessionStorage.RemoveItem("userId");
+        }
+        if (sessionStorage.GetItem<string>("gridParameters") != null)
+        {
+            sessionStorage.RemoveItem("gridParameters");
+        }
+        if (sessionStorage.GetItem<string>("companyConfiguration") != null)
+        {
+            sessionStorage.RemoveItem("companyConfiguration");
+        }
+        navMenuService.StopTimer();
         await InvokeAsync(() =>
         {
             StateHasChanged();
