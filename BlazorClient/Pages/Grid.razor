@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="row" style="height: auto; background-color: darkblue;">
-            <p>Earthing  an  electricity  supply  network  and  a  generator  system  requires  the DNO, generating  plant and  electrical  equipment  to  be  connected  to  an  earth  system  with appropriate earth electrodes.</p>
+            <p>Earthing  an  electricity  supply  network  and  a  generator  system  requires  the DNO,generating  plantand  electrical  equipment  to  be  connected  to  an  earth  system  with appropriate earth electrodes.</p>
             <p>Wherever  networks  operating  with  different  voltages  are  in  close  proximity  and resistance areas of their earth systems overlap, the overlapping earth systems should be interconnected and the resistance of the overall earth system should be reduced to a safe value considering the maximum prospective earth fault currents at the site.</p>
             <p>HV metered supplies to generator premises require a combined HV earth system. The HV  earth  terminal  will  include  an  earth  connection  to  a DNOearth  electrode  system and  possibly  provide  a  metallic  path  to  the  point  where  the DNOHV  network  neutral pointis earthed.</p>
         </div>
@@ -233,17 +233,17 @@
         double taxes = profit * companyModel.TaxRates / 100;
         if (profit - maintenanceCost - taxes <= 0)
         {
-            return $"This connection isn't profitable, you lose {Math.Round(Math.Abs(profit - maintenanceCost - taxes, 4))}$ per hour. Unless you expect a great influx of clients, you will lose funds in this area.";
+            return $"This connection proves to be a bad investition, you lose {Math.Round(profit - maintenanceCost - taxes, 4)}$ per hour. Unless you expect a great increase of clients, you would lose funds in this area.";
         }
         if (profit - maintenanceCost - taxes <= profit * 0.25) //albitrary 25%
         {
-            return $"This connection is oversized for the current load. Stop expanding here, reduce the maintenance costs and try to attract more customers in this area.";
+            return $"You are not on the losing end, however this connection's profit does not justify its high capacity. It is recommended to either decrease this grid's size to reduce the maintenance cost or you should provide to more clients.";
         }
         if (profit > maxProfit * 0.8)
         {
-            return $"The connection is working at {Math.Round(Math.Abs(100 * profit / maxProfit, 4))}% capacity. It is likely to require expanding in the near future.";
+            return $"The connection is working at {Math.Round(100 * profit / maxProfit, 4)}% capacity. It's a sign to increase the grid's capacity, you ought to consider further investing.";
         }
-        return "This connection is operating within normal parameters.";
+        return "Keep up the good work! This connection is stable enough.";
     }
 
     private async Task RefreshData()
