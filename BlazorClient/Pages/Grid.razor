@@ -14,107 +14,106 @@
 
 @if (sessionStorage.GetItem<bool>("logged"))
 {
-<div class="container">
-    <div class="row" style="height: auto;">
-        <div class="col">
-            <table class="table table-dark table-hover">
-                <tr>
-                    <td scope="col">Connection</td>
-                    <td scope="col">Instant Power</td>
-                    <td scope="col">Average Power</td>
-                    <td scope="col">Max Power</td>
-                </tr>
-                @if (gridWeights != null)
-                {
-                    @foreach (var conn in gridWeights)
+    <div class="container">
+        <div class="row" style="height: auto;">
+            <div class="col">
+                <table class="table table-dark table-hover">
+                    <tr>
+                        <td scope="col">Connection</td>
+                        <td scope="col">Instant Power</td>
+                        <td scope="col">Average Power</td>
+                        <td scope="col">Max Power</td>
+                    </tr>
+                    @if (gridWeights != null)
                     {
-                        <tr>
-                            <td>@conn.Key</td>
-                            @if (float.Parse(conn.Value.ToString()) > 0.85f * float.Parse(((string)edgeCost[conn.Key])))
-                            {
-                                <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
-                            }
-                            else
-                            {
-                                <td>@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
-                            }
-                            <td>@Math.Round(float.Parse(averageEdgeCost[conn.Key].ToString()), 4).ToString()</td>
-                            <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])), 4).ToString()</td>
-                        </tr>
+                        @foreach (var conn in gridWeights)
+                        {
+                            <tr>
+                                <td>@conn.Key</td>
+                                @if (float.Parse(conn.Value.ToString()) > 0.85f * float.Parse(((string)edgeCost[conn.Key])))
+                                {
+                                    <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                else
+                                {
+                                    <td>@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                <td>@Math.Round(float.Parse(averageEdgeCost[conn.Key].ToString()), 4).ToString()</td>
+                                <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])), 4).ToString()</td>
+                            </tr>
+                        }
                     }
-                }
-            </table>
-        </div>
-        <div class="col">
-            <div id="mynetwork">
-                <div class="vis network-frame" style="position: relative; overflow: hidden; width: 100%; height: 400px;">
-                    <canvas style="position: relative; user-select: none; touch-action: pan-y; width: 100%; height: 400px; ">
-                    </canvas>
+                </table>
+            </div>
+            <div class="col">
+                <div id="mynetwork">
+                    <div class="vis network-frame" style="position: relative; overflow: hidden; width: 100%; height: auto;">
+                        <canvas style="position: relative; user-select: none; touch-action: pan-y; width: 100%; height: auto;">
+                        </canvas>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    @if (isAnalysisDone)
-    {
-        <table class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <td scope="col">Connection</td>
-                    <td scope="col">Max capacity (kwh)</td>
-                    <td scope="col">Instant power (kwh)</td>
-                    <td scope="col">Tendency of growth</td>
-                    <td scope="col">Maintenance cost</td>
-                    <td scope="col">Profit</td>
-                    <td scope="col">Taxes</td>
-                    <td scope="col">Advice</td>
-                </tr>
-            </thead>
-            <tbody>
-                @if (staticGridWeights != null)
-                {
-                    @foreach (var conn in staticGridWeights)
+        @if (isAnalysisDone)
+        {
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <td scope="col">Connection</td>
+                        <td scope="col">Max capacity (kwh)</td>
+                        <td scope="col">Instant power (kwh)</td>
+                        <td scope="col">Tendency of growth</td>
+                        <td scope="col">Maintenance cost</td>
+                        <td scope="col">Profit</td>
+                        <td scope="col">Taxes</td>
+                        <td scope="col">Advice</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (staticGridWeights != null)
                     {
-                        <tr>
-                            <td>@conn.Key</td>
-                            <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])), 4).ToString()</td>
-                            @if (float.Parse(conn.Value.ToString()) > 0.85f * float.Parse(((string)edgeCost[conn.Key])))
-                            {
-                                <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
-                            }
-                            else
-                            {
-                                <td>@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
-                            }
-                            @if (float.Parse(conn.Value.ToString()) > float.Parse(averageEdgeCost[conn.Key].ToString()))
-                            {
-                                <td>Asc.</td>
-                            }
-                            else
-                            {
-                                <td>Desc.</td>
-                            }
-                            <td>@Math.Round(energyCost * (float.Parse(((string)edgeCost[conn.Key])) * 0.1 + (float.Parse(((string)edgeCost[conn.Key])) * 0.1) * companyModel.TaxRates / 100), 4)</td>
-                            <td>@Math.Round(float.Parse(conn.Value.ToString()) * energyCost, 4)</td>
-                            <td>@Math.Round(float.Parse(conn.Value.ToString()) * energyCost * companyModel.TaxRates / 100, 4)</td>
-                            <td>@GetAdvice(profit: float.Parse(conn.Value.ToString()) * energyCost, maxProfit: energyCost * float.Parse(((string)edgeCost[conn.Key])))</td>
-                        </tr>
+                        @foreach (var conn in staticGridWeights)
+                        {
+                            <tr>
+                                <td>@conn.Key</td>
+                                <td>@Math.Round(float.Parse(((string)edgeCost[conn.Key])), 1).ToString()</td>
+                                @if (float.Parse(conn.Value.ToString()) > 0.85f * float.Parse(((string)edgeCost[conn.Key])))
+                                {
+                                    <td style="color: red;">@Math.Round(float.Parse(conn.Value.ToString()), 4)</td>
+                                }
+                                else
+                                {
+                                    <td>@Math.Round(float.Parse(conn.Value.ToString()), 1)</td>
+                                }
+                                @if (float.Parse(conn.Value.ToString()) > float.Parse(averageEdgeCost[conn.Key].ToString()))
+                                {
+                                    <td>Asc.</td>
+                                }
+                                else
+                                {
+                                    <td>Desc.</td>
+                                }
+                                <td>@Math.Round(energyCost * (float.Parse(((string)edgeCost[conn.Key])) * 0.1 + (float.Parse(((string)edgeCost[conn.Key])) * 0.1) * companyModel.TaxRates / 100), 1)</td>
+                                <td>@Math.Round(float.Parse(conn.Value.ToString()) * energyCost, 1)</td>
+                                <td>@Math.Round(float.Parse(conn.Value.ToString()) * energyCost * companyModel.TaxRates / 100, 1)</td>
+                                <td>@GetAdvice(profit: float.Parse(conn.Value.ToString()) * energyCost, maxProfit: energyCost * float.Parse(((string)edgeCost[conn.Key])))</td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <button @onclick="RequestAnalysis">
-            Request Analysis
-        </button>
-    }
-    <div class="table table-dark table-hover"; style="background-color: #3a0647;">
-        <p>Earthing an electricity supply network and a generator system requires the DNO, generating plant and electrical equipment to be connected to an earth system with appropriate earth electrodes.</p>
-        <p>Wherever  networks  operating  with  different  voltages  are  in  close  proximity  and resistance areas of their earth systems overlap, the overlapping earth systems should be interconnected and the resistance of the overall earth system should be reduced to a safe value considering the maximum prospective earth fault currents at the site.</p>
-        <p>HV metered supplies to generator premises require a combined HV earth system. The HV  earth  terminal  will  include  an  earth  connection  to  a DNOearth  electrode  system and  possibly  provide  a  metallic  path  to  the  point  where  the DNOHV  network  neutral pointis earthed.</p>
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            <br />
+            <button style="font-size: 24px; display:flex; margin:auto; text-align: center; font-weight:bold;" @onclick="RequestAnalysis">
+                Request Analysis
+            </button>
+            <br />
+        }
     </div>
-</div>
 }
 
 @code{
@@ -190,7 +189,7 @@
                 return;
             }
             var messageResponse = JsonConvert.DeserializeObject<MessageResponse>(responseBody);
-            energyCost = Convert.ToDouble(messageResponse.Message);
+            energyCost = Math.Round(Convert.ToDouble(messageResponse.Message) / 1000000000000);
         }
         {
             if (gridWeights == null)
@@ -229,11 +228,11 @@
 
     private string GetAdvice(double profit, double maxProfit)
     {
-        double maintenanceCost = maxProfit * 0.1 + (maxProfit * 0.1) * companyModel.TaxRates / 100;
-        double taxes = profit * companyModel.TaxRates / 100;
+        double maintenanceCost = Math.Round(maxProfit * 0.1 + (maxProfit * 0.1) * companyModel.TaxRates / 100);
+        double taxes = Math.Round(profit * companyModel.TaxRates / 100);
         if (profit - maintenanceCost - taxes <= 0)
         {
-            return $"This connection isn't profitable, you lose {Math.Round(Math.Abs(profit - maintenanceCost - taxes), 4)}$ per hour. Unless you expect a great influx of clients, you will lose funds in this area.";
+            return $"This connection isn't profitable, you lose {Math.Round(Math.Abs(profit - maintenanceCost - taxes), 1)}$ per hour. Unless you expect a great influx of clients, you will lose funds in this area.";
         }
         if (profit - maintenanceCost - taxes <= profit * 0.25) //albitrary 25%
         {
@@ -241,7 +240,7 @@
         }
         if (profit > maxProfit * 0.8)
         {
-            return $"The connection is working at {Math.Round(Math.Abs(100 * profit / maxProfit), 4)}% capacity. It is likely to require expanding in the near future.";
+            return $"The connection is working at {Math.Round(Math.Abs(100 * profit / maxProfit), 1)}% capacity. It is likely to require expanding in the near future.";
         }
         return "This connection is operating within normal parameters.";
     }
