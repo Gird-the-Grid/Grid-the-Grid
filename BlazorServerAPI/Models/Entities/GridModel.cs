@@ -18,12 +18,12 @@ namespace BlazorServerAPI.Models.Entities
         public GridModel() : base()
         { }
 
-        public GridModel(AdjacencyGraph<string, Edge<string>> graph, Dictionary<Edge<string>, double> edgeCost, string ownerId) : this(graph, edgeCost)
+        public GridModel(IEdgeListGraph<string, Edge<string>> graph, Dictionary<Edge<string>, double> edgeCost, string ownerId) : this(graph, edgeCost)
         {
             OwnerId = ownerId;
         }
         //TODO: Add [BsonConstructor] to constructors in all entities
-        public GridModel(AdjacencyGraph<string, Edge<string>> graph, Dictionary<Edge<string>, double> edgeCost) : base()
+        public GridModel(IEdgeListGraph<string, Edge<string>> graph, Dictionary<Edge<string>, double> edgeCost) : base()
         {
             var graphviz = new GraphvizAlgorithm<string, Edge<string>>(graph);
             Dot = graphviz.Generate();

@@ -1,4 +1,6 @@
-﻿namespace BlazorServerAPI.Models.Requests
+﻿using BlazorServerAPI.Utils;
+
+namespace BlazorServerAPI.Models.Requests
 {
     public class ConfirmRegistrationMailRequest : MailRequest
     {
@@ -9,10 +11,10 @@
         {
             //TODO: Remove hardcoded URI
             return $"Thanks for signing up with Gird-the-Grid!<br />\r\n<br />\r\n" +
-                $"You must follow this link to activate your account: http://localhost:49429/auth/confirm?userId={userId} <br />\r\n<br />\r\n" +
+                $"You must follow this link to activate your account: {Text.AuthConfirmationUrl(userId)} <br />\r\n<br />\r\n" +
                 $"Have fun, and don't hesitate to contact us with your feedback.<br />\r\n" +
                 $"Gird-the-Grid team, <br />\r\n" +
-                $"http://localhost:49481/";
+                $"{Text.BaseUrl}";
             //TODO: When no other task exists, maybe add css to mail
         }
     }

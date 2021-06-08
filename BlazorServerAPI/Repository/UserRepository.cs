@@ -1,7 +1,6 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Settings;
 using MongoDB.Driver;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Repository

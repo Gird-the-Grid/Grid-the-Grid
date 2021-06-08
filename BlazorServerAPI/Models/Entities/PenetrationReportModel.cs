@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace BlazorServerAPI.Models.Entities
@@ -13,10 +12,7 @@ namespace BlazorServerAPI.Models.Entities
 
         public void AddIp(string ip)
         {
-            if (IpList == null)
-            {
-                IpList = new Dictionary<string, int>();
-            }
+            IpList ??= new Dictionary<string, int>(); //if null, make new 
             if (IpList.ContainsKey(ip))
             {
                 ++IpList[ip];

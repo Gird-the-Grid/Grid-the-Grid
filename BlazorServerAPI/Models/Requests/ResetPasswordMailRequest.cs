@@ -1,4 +1,6 @@
-﻿namespace BlazorServerAPI.Models.Requests
+﻿using BlazorServerAPI.Utils;
+
+namespace BlazorServerAPI.Models.Requests
 {
     public class ResetPasswordMailRequest : MailRequest
     {
@@ -12,7 +14,7 @@
                 $"http:// <<< here should be a link to a page that sends POST /auth/reset with {{\"userId\": \"{userId}\", \"password\": \"newPassword\"}} >>> ?userId={userId} <br />\r\n<br />\r\n" +
                 $"Have fun, and don't hesitate to contact us with your feedback.<br />\r\n" +
                 $"Gird-the-Grid team, <br />\r\n" +
-                $"http://localhost:49481/";
+                $"{Text.BaseUrl}";
             //TODO: When no other task exists, maybe add css to mail
         }
     }

@@ -11,7 +11,6 @@ using BlazorServerAPI.Middlewares;
 using BlazorServerAPI.Settings;
 using BlazorServerAPI.Services;
 using FluentValidation.AspNetCore;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using BlazorServerAPI.Models.Responses;
 using System.Linq;

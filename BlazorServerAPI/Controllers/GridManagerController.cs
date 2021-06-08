@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 
 namespace BlazorServerAPI.Controllers
@@ -27,9 +28,9 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (userId != HttpContext.Items["UserId"].ToString())
+                if (userId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
                 var currentWeights = await _gridManagerHandler.GetCurrentWeights(userId);
                 return StatusCode(StatusCodes.Status200OK, currentWeights.ToString());
@@ -38,9 +39,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -56,9 +57,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
     }

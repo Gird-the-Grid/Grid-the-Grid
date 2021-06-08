@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Middlewares
 {
@@ -21,7 +22,7 @@ namespace BlazorServerAPI.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers[Text.Authorization].FirstOrDefault()?.Split(Text.Space).Last();
             try
             {
                 attachUserToContext(context, token);
@@ -29,7 +30,7 @@ namespace BlazorServerAPI.Middlewares
             catch
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Invalid token");
+                await context.Response.WriteAsync(Text.InvalidToken);
                 return;
             }
             await _next(context);
@@ -38,7 +39,7 @@ namespace BlazorServerAPI.Middlewares
         private static void attachUserToContext(HttpContext context, string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(DotEnv.Read()["SECRET"].PadLeft(32));
+            var key = Encoding.ASCII.GetBytes(DotEnv.Read()[Text.Secret].PadLeft(32));
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -46,11 +47,11 @@ namespace BlazorServerAPI.Middlewares
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
+            }, out var validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
-            context.Items["UserId"] = userId;
+            var userId = jwtToken.Claims.First(x => x.Type == Text.Id).Value;
+            context.Items[Text.UserId] = userId;
         }
 
     }

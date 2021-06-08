@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Handlers
 {
-    public interface IBaseResourceHandler<T>
+    public interface IBaseResourceHandler<in T>
     {
         Task<IResponse> CreateResource(T ownedEntity);
         Task<IResponse> UpdateResource(T ownedEntity);

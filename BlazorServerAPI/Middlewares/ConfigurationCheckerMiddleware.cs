@@ -3,6 +3,7 @@ using BlazorServerAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Middlewares
 {
@@ -18,23 +19,23 @@ namespace BlazorServerAPI.Middlewares
 
         public async Task Invoke(HttpContext context, CompanyRepository companyRepository, GridRepository gridRepository)
         {
-            var userId = (string) context.Items["UserId"];
+            var userId = (string) context.Items[Text.UserId];
             try
             {
-                await attackConfigurationToContext<CompanyModel>(context, "Company", companyRepository, userId);
-                await attackConfigurationToContext<GridModel>(context, "Grid", gridRepository, userId);
+                await attachConfigurationToContext<CompanyModel>(context, Text.Company, companyRepository, userId);
+                await attachConfigurationToContext<GridModel>(context, Text.Grid, gridRepository, userId);
             }
             catch (Exception e)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync($"Exception: {e.ToString()}, {e.Message}");
+                await context.Response.WriteAsync(Text.Exception(e));
                 return;
             }
             await _next(context);
         }
 
 
-        private static async Task attackConfigurationToContext<T>(HttpContext context, string configurationType, OwnedResourceRepository<T> ownedResourceRepository, string userId) where T : OwnedEntity
+        private static async Task attachConfigurationToContext<T>(HttpContext context, string configurationType, OwnedResourceRepository<T> ownedResourceRepository, string userId) where T : OwnedEntity
         {
             var configuration = await ownedResourceRepository.GetObject(userId);
             context.Items[configurationType] = configuration;

@@ -3,8 +3,10 @@ using BlazorServerAPI.Repository;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using BlazorServerAPI.Utils.Extensions;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Handlers
 {
@@ -25,7 +27,7 @@ namespace BlazorServerAPI.Handlers
             var grid = await _gridRepository.GetObject(userId);
             if (grid == null)
             {
-                return new ErrorResponse(error: "grid has no configuration");
+                return new ErrorResponse(error: Text.UnconfiguredGrid);
             }
             var edgeCost = JsonConvert.DeserializeObject<Dictionary<string, double>>(grid.EdgeCost);
             //TODO: here we sould actually have Dictionary<Edge<string>, double> but json converter cannot convert "1->3" to Edge<string> which should be new Edge<string>("1", "3")
@@ -36,7 +38,7 @@ namespace BlazorServerAPI.Handlers
                 var value = _rand.NextDouble(0, edgeCost[edge]);
                 if (_rand.Next() % 3 == 0)
                 {
-                    value = value / (_rand.Next() % 4 + 1);
+                    value /= (_rand.Next() % 4 + 1);
                 }
                 currentEdgeCost.Add(edge, value);
             }
@@ -51,7 +53,7 @@ namespace BlazorServerAPI.Handlers
             {
                 price = _rand.NextDouble(11, 15);
             });
-            return new MessageResponse(price.ToString());
+            return new MessageResponse(price.ToString(CultureInfo.InvariantCulture));
         }
 
     }

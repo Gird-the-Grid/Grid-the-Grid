@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 
 namespace BlazorServerAPI.Controllers
@@ -31,12 +32,13 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                var oldCompanyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                var oldCompanyConfiguration = (CompanyModel)HttpContext.Items[Text.Company];
                 if (oldCompanyConfiguration != null)
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot have more than 1 company configuration").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.CompanyConfigurationError).ToString());
                 }
-                companyConfiguration.OwnerId = HttpContext.Items["UserId"].ToString();
+
+                companyConfiguration.OwnerId = HttpContext.Items[Text.UserId]?.ToString();
                 var response = await _companyHandler.CreateResource(companyConfiguration);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
             }
@@ -44,13 +46,13 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is MongoDB.Driver.MongoWriteException)
                 {
-                    return BadRequest(new ErrorResponse(error: "This company's configuration already exists"));
+                    return BadRequest(new ErrorResponse(error: Text.CompanyConfigurationExists));
                 }
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -59,14 +61,14 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (companyConfiguration.OwnerId != HttpContext.Items["UserId"].ToString())
+                if (companyConfiguration.OwnerId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var oldCompanyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                var oldCompanyConfiguration = (CompanyModel)HttpContext.Items[Text.Company];
                 if (oldCompanyConfiguration == null)
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot update non-existent resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.ResourceDoesNotExist).ToString());
                 }
                 var response = await _companyHandler.UpdateResource(companyConfiguration);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
@@ -75,9 +77,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -86,14 +88,14 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (userId != HttpContext.Items["UserId"].ToString())
+                if (userId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var companyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                var companyConfiguration = (CompanyModel)HttpContext.Items[Text.Company];
                 if (companyConfiguration == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "company has no configuration").ToString());
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: Text.UnconfiguredCompany).ToString());
                 }
                 MessageResponse companyConfigurationResponse = null;
                 await Task.Run(() =>
@@ -106,9 +108,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -117,14 +119,14 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (userId != HttpContext.Items["UserId"].ToString())
+                if (userId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var companyConfiguration = (CompanyModel)HttpContext.Items["Company"];
+                var companyConfiguration = (CompanyModel)HttpContext.Items[Text.Company];
                 if (companyConfiguration == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "company has no configuration").ToString());
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: Text.UnconfiguredCompany).ToString());
                 }
                 var response = await _companyHandler.DeleteResource(userId);
                 return StatusCode(StatusCodes.Status204NoContent, response.ToString());
@@ -133,9 +135,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -144,12 +146,12 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                var oldGridModel = (GridModel)HttpContext.Items["Grid"];
+                var oldGridModel = (GridModel)HttpContext.Items[Text.Grid];
                 if (oldGridModel != null)
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot have more than 1 grid template").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.GridConfigurationError).ToString());
                 }
-                gridTemplate.OwnerId = HttpContext.Items["UserId"].ToString();
+                gridTemplate.OwnerId = HttpContext.Items[Text.UserId]?.ToString();
                 var response = await _gridHandler.CreateGridParameters(gridTemplate);
                 return StatusCode(StatusCodes.Status201Created, response.ToString());
             }
@@ -157,9 +159,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -168,14 +170,14 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (grid.OwnerId != HttpContext.Items["UserId"].ToString())
+                if (grid.OwnerId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var oldGridModel = (GridModel)HttpContext.Items["Grid"];
+                var oldGridModel = (GridModel)HttpContext.Items[Text.Grid];
                 if (oldGridModel == null)
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("Cannot update non-existent resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.ResourceDoesNotExist).ToString());
                 }
                 var response = await _gridHandler.UpdateGridParameters(grid);
                 return StatusCode(StatusCodes.Status200OK, response.ToString());
@@ -184,9 +186,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -196,14 +198,14 @@ namespace BlazorServerAPI.Controllers
             //TODO: find a way to check if userId is valid guid. Guid.TryParse(userId, out _) is not working, mongo has another format
             try
             {
-                if (userId != HttpContext.Items["UserId"].ToString())
+                if (userId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var gridModel = (GridModel)HttpContext.Items["Grid"];
+                var gridModel = (GridModel)HttpContext.Items[Text.Grid];
                 if (gridModel == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: Text.UnconfiguredGrid).ToString());
                 }
                 MessageResponse gridModelResponse = null;
                 await Task.Run(() =>
@@ -216,9 +218,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -227,14 +229,14 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (userId != HttpContext.Items["UserId"].ToString())
+                if (userId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var gridModel = (GridModel)HttpContext.Items["Grid"];
+                var gridModel = (GridModel)HttpContext.Items[Text.Grid];
                 if (gridModel == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: Text.UnconfiguredGrid).ToString());
                 }
                 var response = await _gridHandler.DeleteResource(userId);
                 return StatusCode(StatusCodes.Status204NoContent, response.ToString());
@@ -243,9 +245,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -254,14 +256,14 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                if (userId != HttpContext.Items["UserId"].ToString())
+                if (userId != HttpContext.Items[Text.UserId]?.ToString())
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse("User doesn't own this resource").ToString());
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(Text.UnownedResource).ToString());
                 }
-                var gridModel = (GridModel)HttpContext.Items["Grid"];
+                var gridModel = (GridModel)HttpContext.Items[Text.Grid];
                 if (gridModel == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: "grid has no template").ToString());
+                    return StatusCode(StatusCodes.Status404NotFound, new ErrorResponse(error: Text.UnconfiguredGrid).ToString());
                 }
                 var response = await _gridHandler.GetGridDotString(userId);
                 var gridModelResponse = new MessageResponse(response);
@@ -271,9 +273,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 

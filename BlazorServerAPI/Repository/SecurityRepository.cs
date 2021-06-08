@@ -1,7 +1,6 @@
 ﻿using BlazorServerAPI.Models.Entities;
 using BlazorServerAPI.Settings;
 using MongoDB.Driver;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorServerAPI.Repository
@@ -21,8 +20,7 @@ namespace BlazorServerAPI.Repository
             var report = await FindPenetrationReportByEmail(email);
             if (report == null)
             {
-                report = new PenetrationReportModel();
-                report.Email = email;
+                report = new PenetrationReportModel {Email = email};
                 report.AddIp(ip);
                 ++report.PasswordAtempts;
                 await _documents.InsertOneAsync(report);

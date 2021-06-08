@@ -2,12 +2,14 @@
 using BlazorServerAPI.Models.Responses;
 using BlazorServerAPI.Repository;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Handlers
 {
     public class BaseResourceHandler<T> : IBaseResourceHandler<T> where T : OwnedEntity
     {
         protected readonly OwnedResourceRepository<T> _resourceRepository;
+
         public BaseResourceHandler(OwnedResourceRepository<T> resourceRepository)
         {
             _resourceRepository = resourceRepository;
@@ -16,7 +18,7 @@ namespace BlazorServerAPI.Handlers
         public virtual async Task<IResponse> CreateResource(T ownedEntity)
         {
             _ = await _resourceRepository.CreateObject(ownedEntity);
-            return new MessageResponse($"{ownedEntity.GetType()} settings updated");
+            return new MessageResponse(Text.SettingsUpdated(ownedEntity.GetType()));
         }
 
         public async Task<IResponse> UpdateResource(T ownedEntity)
@@ -24,9 +26,9 @@ namespace BlazorServerAPI.Handlers
             var updatedEntity = await _resourceRepository.UpdateObject(ownedEntity.Id, ownedEntity);
             if (updatedEntity == null)
             {
-                return new ErrorResponse(error: "Invalid company id or illegal company modification");
+                return new ErrorResponse(error: Text.IllegalModification);
             }
-            return new MessageResponse($"{updatedEntity.GetType()} settings updated");
+            return new MessageResponse(Text.SettingsUpdated(updatedEntity.GetType()));
         }
 
         public async Task<IResponse> GetResource(string userId)
@@ -34,7 +36,7 @@ namespace BlazorServerAPI.Handlers
             var resource = await _resourceRepository.GetObject(userId);
             if (resource == null)
             {
-                return new ErrorResponse(error: $"{typeof(T)} has no configuration");
+                return new ErrorResponse(error: Text.NoConfiguration(typeof(T)));
             }
             return new MessageResponse(resource.ToString());
         }
@@ -44,9 +46,9 @@ namespace BlazorServerAPI.Handlers
             var resource = await _resourceRepository.DeleteObject(userId);
             if (resource == null)
             {
-                return new ErrorResponse(error: $"{typeof(T)} has no configuration");
+                return new ErrorResponse(error: Text.NoConfiguration(typeof(T)));
             }
-            return new MessageResponse("Deleted");
+            return new MessageResponse(Text.Deleted);
         }
     }
 }

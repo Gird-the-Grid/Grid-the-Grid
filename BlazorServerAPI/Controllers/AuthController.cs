@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Controllers
 {
@@ -35,13 +36,13 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is MongoDB.Driver.MongoWriteException)
                 {
-                    return BadRequest(new ErrorResponse(error: "Email used").ToString());
+                    return BadRequest(new ErrorResponse(error: Text.EmailUsed).ToString());
                 }
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -50,22 +51,26 @@ namespace BlazorServerAPI.Controllers
         {
             try
             {
-                var ip = HttpContext.Connection.RemoteIpAddress.ToString();
-                if (string.IsNullOrEmpty(ip))
+                if (HttpContext.Connection.RemoteIpAddress != null)
                 {
-                    ip = "Unknown";
+                    var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+                    if (string.IsNullOrEmpty(ip))
+                    {
+                        ip = Text.Unknown;
+                    }
+                    var responseOnLogin = await _handler.Login(user, ip);
+                    return StatusCode(StatusCodes.Status202Accepted, responseOnLogin.ToString());
                 }
-                var responseOnLogin = await _handler.Login(user, ip);
-                return StatusCode(StatusCodes.Status202Accepted, responseOnLogin.ToString());
             }
             catch (Exception e)
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResponse(error: Text.Forbidden).ToString());
         }
 
         [HttpGet("confirm")]
@@ -80,13 +85,13 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is FormatException)
                 {
-                    return BadRequest(new ErrorResponse(error: $"{userId} is not a valid confirmation link").ToString());
+                    return BadRequest(new ErrorResponse(error: Text.InvalidConfirmationString(userId)).ToString());
                 }
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -102,9 +107,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
 
@@ -120,9 +125,9 @@ namespace BlazorServerAPI.Controllers
             {
                 if (e is ServerException)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Server exception", errorMessage: e.ToString()).ToString());
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.ServerException, errorMessage: e.ToString()).ToString());
                 }
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: "Internal server error", errorMessage: e.ToString()).ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse(error: Text.InternalServerError, errorMessage: e.ToString()).ToString());
             }
         }
     }

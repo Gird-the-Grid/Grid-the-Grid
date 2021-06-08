@@ -1,6 +1,6 @@
 ﻿using BlazorServerAPI.Models.Entities;
-using System;
 using System.Text;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Models.Requests
 {
@@ -15,13 +15,14 @@ namespace BlazorServerAPI.Models.Requests
             var stringBuilder = new StringBuilder();
             stringBuilder.Append($"Security report from Gird-the-Grid!<br />\r\n<br />\r\n" +
                 $"Your Gird-the-Grid Account just had several failed login attempts. You're getting this email to make sure it was you. <br />\r\n<br />\r\n");
-            foreach(var attempt in report.IpList)
+            foreach (var (key, value) in report.IpList)
             {
-                stringBuilder.Append($"IP: {attempt.Key} has failed the login for {attempt.Value} time(s)<br />\r\n");
+                stringBuilder.Append($"IP: {key} has failed the login for {value} time(s)<br />\r\n");
             }
             stringBuilder.Append($"<br />\r\nHave fun, and don't hesitate to contact us with your feedback.<br />\r\n" +
                 $"Gird-the-Grid team, <br />\r\n" +
-                $"http://localhost:49481/");
+                $"{Text.BaseUrl}"
+                );
             return stringBuilder.ToString();
             //TODO: When no other task exists, maybe add css to mail
         }

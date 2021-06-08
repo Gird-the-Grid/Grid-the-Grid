@@ -13,8 +13,10 @@ namespace BlazorServerAPI.Handlers
 
         public override async Task<IResponse> CreateResource(CompanyModel ownedEntity)
         {
-            var newCompanyConfiguration = new CompanyModel(ownedEntity.CompanyName, ownedEntity.CompanyIdentificationNumber, ownedEntity.Country, ownedEntity.TaxRates);
-            newCompanyConfiguration.OwnerId = ownedEntity.OwnerId;
+            var newCompanyConfiguration = new CompanyModel(ownedEntity.CompanyName, ownedEntity.CompanyIdentificationNumber, ownedEntity.Country, ownedEntity.TaxRates)
+            {
+                OwnerId = ownedEntity.OwnerId
+            };
             return await base.CreateResource(newCompanyConfiguration);
         }
     }

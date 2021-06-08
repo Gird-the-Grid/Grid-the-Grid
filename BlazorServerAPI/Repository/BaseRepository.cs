@@ -2,11 +2,11 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 using MongoDB.Bson;
 using BlazorServerAPI.Settings;
 using System;
 using BlazorServerAPI.Models.Entities;
+using BlazorServerAPI.Utils;
 
 namespace BlazorServerAPI.Repository
 {
@@ -16,8 +16,8 @@ namespace BlazorServerAPI.Repository
 
         public BaseRepository(IMongoDbSettings settings, string collection)
         {
-            var client = new MongoClient(DotEnv.Read()["MONGODB_URI"]);
-            var database = client.GetDatabase(DotEnv.Read()["MONGODB_DB"]);
+            var client = new MongoClient(DotEnv.Read()[Text.MongoDbUri]);
+            var database = client.GetDatabase(DotEnv.Read()[Text.MongoDbDb]);
             _documents = database.GetCollection<T>(collection);
         }
 
@@ -29,21 +29,21 @@ namespace BlazorServerAPI.Repository
 
         public async Task<T> Get(string id)
         {
-            var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
+            var filter = Builders<T>.Filter.Eq(Text.MongoDbId, new ObjectId(id));
             var docsFilteredById = await _documents.FindAsync<T>(filter);
             return docsFilteredById.SingleOrDefault();
         }
 
         public async Task Update(string id, T documentIn)
         {
-            var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
+            var filter = Builders<T>.Filter.Eq(Text.MongoDbId, new ObjectId(id));
             documentIn.UpdatedAt = DateTime.Now;
             await _documents.ReplaceOneAsync(filter, documentIn);
         }
 
         public async Task Remove(string id)
         {
-            var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
+            var filter = Builders<T>.Filter.Eq(Text.MongoDbId, new ObjectId(id));
             await _documents.DeleteOneAsync(filter);
         }
 
